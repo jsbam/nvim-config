@@ -227,18 +227,32 @@ return {
       ---@diagnostic disable-next-line: undefined-field
       require('lualine').setup {
         options = {
-          thene = 'oscura',
+          theme = 'oscura',
           icon_enabled = true,
           section_separators = { left = '', right = '' },
           component_separators = '|',
           globalstatus = true,
+          disabled_filetypes = {},
         },
         sections = {
           lualine_a = { 'mode', macro_recording },
           lualine_b = { 'branch', 'diff', 'diagnostics' },
           -- lualine_b = {},
           lualine_c = {
-            { 'filename', file_status = true, path = 1 },
+            {
+              'filename',
+              file_status = true,
+              path = 1,
+              fmt = function(str)
+                if vim.bo.filetype == 'oil' then
+                  return '' -- show nothing for oil buffer name
+                end
+                -- Clean up "oil://" and shorten to just folder name
+                str = str:gsub('^oil://', '')
+                local tail = str:match '([^/]+)/?$'
+                return tail or str
+              end,
+            },
             'searchcount',
           },
           lualine_x = { 'filetype' },

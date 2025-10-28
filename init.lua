@@ -5,8 +5,9 @@ if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
   -- \\ in Lua strings → \ on disk
   vim.g.sqlite_clib_path = 'C:\\ProgramData\\chocolatey\\lib\\sqlite\\tools\\sqlite3.dll'
 end
--- open config
+-- open config 
 vim.cmd 'nmap <leader>oi :e ~/AppData/Local/nvim/init.lua<cr>'
+
 
 -- save
 vim.cmd 'nmap <leader>s :w<cr>'
@@ -63,24 +64,13 @@ vim.g.VM_maps = {
 
 if vim.g.vscode then
   --  See `:help vim.hl.on_yank()`
-
--- Define your custom yank highlight group
-vim.api.nvim_set_hl(0, "YankHighlight", { bg = "#dfafdd", fg = "#0b0b0f" })
-
--- Apply the highlight on yank using the custom group
-vim.api.nvim_create_autocmd("TextYankPost", {
-  pattern = "*",
-  callback = function()
-    vim.highlight.on_yank({ higroup = "YankHighlight", timeout = 300 })
-  end,
-})
-  -- vim.api.nvim_create_autocmd('TextYankPost', {
-  --   desc = 'Highlight when yanking (copying) text',
-  --   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  --   callback = function()
-  --     vim.hl.on_yank()
-  --   end,
-  -- })
+  vim.api.nvim_create_autocmd('TextYankPost', {
+    desc = 'Highlight when yanking (copying) text',
+    group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+    callback = function()
+      vim.hl.on_yank()
+    end,
+  })
   -- Move selected lines down in visual modes
   vim.keymap.set('x', 'J', ":move '>+1<CR>gv=gv", { desc = 'Move lines down', silent = true })
 
@@ -104,8 +94,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     { 'n', '<leader>ok', 'workbench.action.openGlobalKeybindingsFile' },
     -- toggle developer tools
     { 'n', '<leader>od', 'workbench.action.toggleDevTools' },
-    -- open extensions view
-    { 'n', '<leader>ox', 'workbench.view.extensions' },
     -- copy file path to clipboard
     { 'n', '<leader>cp', 'copyRelativeFilePath' },
 
@@ -114,13 +102,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     -- open recent projects
     { 'n', '<leader>fF', 'workbench.action.openRecent' },
     -- create new file
-    { 'n', '<leader>fa', 'workbench.action.files.newUntitledFile' },
-    -- { 'n', '<leader>fa', 'fileutils.newFileAtRoot' },
+    -- { 'n', '<leader>fa', 'workbench.action.files.newUntitledFile' },
+    { 'n', '<leader>fa', 'fileutils.newFileAtRoot' },
     -- clode active file and all files
     { 'n', '<leader>fx', 'workbench.action.closeActiveEditor' },
     { 'n', '<leader>bd', 'workbench.action.closeActiveEditor' },
     { 'n', '<leader>fq', 'workbench.action.closeAllEditors' },
-    { 'n', '<leader>dq', 'workbench.action.closeAllEditors' },
     { 'n', '<leader>bD', 'workbench.action.closeEditorsInOtherGroups' },
     -- search & replace in current file
     { 'n', '<leader>fg', 'actions.find' },
@@ -151,7 +138,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     { 'n', '<leader>e', 'workbench.explorer.fileView.focus' },
     -- toggleTerminal
     { 'n', '<leader>tt', 'workbench.action.terminal.toggleTerminal' },
-
     { 'n', '<leader>tc', 'workbench.panel.positronConsole.focus' },
 
     -- Window Management
@@ -162,14 +148,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     { 'n', '<leader>se', 'workbench.action.evenEditorWidths' },
     -- { 'n', '<leader>wa', 'workbench.action.evenEditorWidths' },
     -- quarto preview
-    { 'n', '<leader>rp', 'quarto.preview' }, -- Ctrl+Shift+N
-    { 'n', '<leader>rc', 'quarto.runCurrentCell' }, -- Ctrl+Shift+Enter
-    { 'n', '<leader>rn', 'quarto.runNextCell' }, -- Ctrl+Alt+N
-    { 'n', '<leader>rp', 'quarto.runPreviousCell' }, -- Ctrl+Alt+P
-    { 'n', '<leader>rP', 'quarto.runCellsAbove' }, -- Ctrl+Shift+Alt+P
-    { 'n', '<leader>rN', 'quarto.runCellsBelow' }, -- Ctrl+Shift+Alt+N
-    { 'n', '<leader>ra', 'quarto.runAllCells' }, -- Ctrl+Alt+R
-    { 'n', '<leader>rr', 'quarto.renderDocument' },
+    { 'n', '<leader>qp', 'quarto.preview' }, -- Ctrl+Shift+N
+    { 'n', '<leader>qc', 'quarto.runCurrentCell' }, -- Ctrl+Shift+Enter
+    { 'n', '<leader>qn', 'quarto.runNextCell' }, -- Ctrl+Alt+N
+    { 'n', '<leader>qp', 'quarto.runPreviousCell' }, -- Ctrl+Alt+P
+    { 'n', '<leader>qP', 'quarto.runCellsAbove' }, -- Ctrl+Shift+Alt+P
+    { 'n', '<leader>qN', 'quarto.runCellsBelow' }, -- Ctrl+Shift+Alt+N
+    { 'n', '<leader>qA', 'quarto.runAllCells' }, -- Ctrl+Alt+R
+    { 'n', '<leader>qr', 'quarto.renderDocument' },
   }
 
   for _, mapping in ipairs(mappings) do
@@ -178,7 +164,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
       vim.fn.VSCodeNotify(command)
     end, opts)
   end
-
   -- Bootstrap lazy.nvim
   require 'config.lazy-bootstrap'
   -- load ONLY the mini-suite (the table returned by lua/plugins/mini.lua)
