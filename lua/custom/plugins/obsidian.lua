@@ -1,5 +1,13 @@
 -- Custom obsidian.nvim configuration override
 -- This overrides the upstream notes.lua to point to OneDrive location
+-- Cross-platform: automatically detects Windows vs Mac paths
+
+local onedrive_path
+if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
+  onedrive_path = '~/OneDrive - Örebro universitet/SCTO-Obsidian'
+else
+  onedrive_path = '~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian'
+end
 
 return {
   {
@@ -12,7 +20,7 @@ return {
       workspaces = {
         {
           name = 'scto',
-          path = '~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian',
+          path = onedrive_path,
         },
       },
     },
