@@ -10,8 +10,8 @@ return {
   { -- new completion plugin
     'saghen/blink.cmp',
     enabled = true,
-    version = '*',
     dev = false,
+    version = '0.*',
     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
     -- build = 'cargo build --release',
     lazy = false,
@@ -30,25 +30,33 @@ return {
         ft = { 'quarto', 'markdown', 'rmarkdown' },
       },
       { 'kdheepak/cmp-latex-symbols' },
+      { 'erooke/blink-cmp-latex' },
     },
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
+      fuzzy = {
+        implementation = 'lua',
+      },
       keymap = {
         preset = 'enter',
-        ['<c-y>'] = { 'show_documentation', 'hide_documentation' },
+        ['<c-y>'] = { 'show', 'show_documentation', 'hide_documentation' },
         ['<c-k>'] = {},
       },
       cmdline = {
         enabled = false,
       },
       sources = {
-        default = { 'lazydev', 'lsp', 'path', 'references', 'git', 'snippets', 'buffer', 'emoji' },
+        default = { 'lazydev', 'lsp', 'path', 'references', 'git', 'snippets', 'buffer', 'emoji', 'latex' },
+        -- default = { 'lazydev', 'lsp', 'path', 'references', 'git', 'snippets', 'emoji', 'latex' },
         providers = {
           emoji = {
             module = 'blink-emoji',
             name = 'Emoji',
             score_offset = -1,
+            enabled = function()
+              return vim.tbl_contains({ 'markdown', 'quarto' }, vim.bo.filetype)
+            end,
           },
           lazydev = {
             name = 'LazyDev',
@@ -70,6 +78,22 @@ return {
             score_offset = 2,
           },
           symbols = { name = 'symbols', module = 'blink.compat.source' },
+          latex = {
+            name = 'Latex',
+            module = 'blink-cmp-latex',
+            opts = {
+              insert_command = function(ctx)
+                local ft = vim.api.nvim_get_option_value('filetype', {
+                  scope = 'local',
+                  buf = ctx.bufnr,
+                })
+                if ft == 'tex' or ft == 'quarto' or ft == 'latex' then
+                  return true
+                end
+                return false
+              end,
+            },
+          },
         },
       },
       appearance = {
@@ -93,66 +117,5 @@ return {
       },
       signature = { enabled = true },
     },
-  },
-
-  { -- gh copilot
-    'zbirenbaum/copilot.lua',
-    enabled = true,
-    config = function()
-      require('copilot').setup {
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 75,
-          keymap = {
-            accept = '<c-a>',
-            accept_word = false,
-            accept_line = false,
-            next = '<M-]>',
-            prev = '<M-[>',
-            dismiss = '<C-]>',
-          },
-        },
-        panel = { enabled = false },
-      }
-    end,
-  },
-
-  { -- LLMs
-    'olimorris/codecompanion.nvim',
-    version = '*',
-    enabled = true,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-treesitter/nvim-treesitter',
-      'nvim-telescope/telescope.nvim',
-    },
-    keys = {
-      { '<leader>ac', ':CodeCompanionChat Toggle<cr>', desc = '[a]i [c]hat' },
-      { '<leader>aa', ':CodeCompanionActions<cr>', desc = '[a]i [a]actions' },
-    },
-    config = function()
-      require('codecompanion').setup {
-        display = {
-          diff = {
-            enabled = true,
-          },
-        },
-        strategies = {
-          chat = {
-            -- adapter = "ollama",
-            adapter = 'copilot',
-          },
-          inline = {
-            -- adapter = "ollama",
-            adapter = 'copilot',
-          },
-          agent = {
-            -- adapter = "ollama",
-            adapter = 'copilot',
-          },
-        },
-      }
-    end,
   },
 }

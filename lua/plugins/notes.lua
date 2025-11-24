@@ -20,38 +20,35 @@ return {
 
   {
     'obsidian-nvim/obsidian.nvim',
-    enabled = false,
+    version = '*',
+    enabled = true,
     lazy = false,
     ft = 'markdown',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     keys = {
-      { '<leader>nd', ':ObsidianToday<cr>', desc = 'obsidian [d]aily' },
+      { '<leader>nd', ':Obsidian today<cr>', desc = 'obsidian [d]aily' },
       { '<leader>nt', ':e ~/notes/readme.md<cr>', desc = 'obsidian [t]odo' },
-      { '<leader>ny', ':ObsidianToday -1<cr>', desc = 'obsidian [y]esterday' },
-      { '<leader>nb', ':ObsidianBacklinks<cr>', desc = 'obsidian [b]acklinks' },
-      { '<leader>nl', ':ObsidianLink<cr>', desc = 'obsidian [l]ink selection' },
-      { '<leader>nf', ':ObsidianFollowLink<cr>', desc = 'obsidian [f]ollow link' },
-      { '<leader>nn', ':ObsidianNew<cr>', desc = 'obsidian [n]ew' },
-      { '<leader>ns', ':ObsidianSearch<cr>', desc = 'obsidian [s]earch' },
-      { '<leader>no', ':ObsidianQuickSwitch<cr>', desc = 'obsidian [o]pen quickswitch' },
-      { '<leader>nO', ':ObsidianOpen<cr>', desc = 'obsidian [O]pen in app' },
+      { '<leader>ny', ':Obsidian yesterday<cr>', desc = 'obsidian [y]esterday' },
+      { '<leader>nb', ':Obsidian backlinks<cr>', desc = 'obsidian [b]acklinks' },
+      { '<leader>nl', ':Obsidian link<cr>', desc = 'obsidian [l]ink selection' },
+      { '<leader>nf', ':Obsidian follow_link<cr>', desc = 'obsidian [f]ollow link' },
+      { '<leader>nn', ':Obsidian new<cr>', desc = 'obsidian [n]ew' },
+      { '<leader>ns', ':Obsidian search<cr>', desc = 'obsidian [s]earch' },
+      { '<leader>no', ':Obsidian quick_switch<cr>', desc = 'obsidian [o]pen quickswitch' },
+      { '<leader>nO', ':Obsidian open<cr>', desc = 'obsidian [O]pen in app' },
     },
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('obsidian').setup {
+    opts = {
         legacy_commands = false,
-        checkboxes = {
-          [" "] = { char = " ", hl_group = "ObsidianTodo" },
-          ["x"] = { char = "x", hl_group = "ObsidianDone" },
-          order = { " ", "x" },
+        ui = {
+          -- checkboxes = { [' '] = {}, ['x'] = {} },
           enable = false,
         },
         workspaces = {
           {
-            name = 'notes',
-            path = '~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian',
+            name = 'scto',
+            path = '~/OneDrive - Örebro universitet/SCTO-Obsidian',
           },
         },
         -- Optional, for templates (see below).
@@ -92,6 +89,5 @@ return {
           return tostring(os.time()) .. '-' .. suffix
         end,
       }
-    end,
   },
 }
