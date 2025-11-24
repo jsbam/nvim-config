@@ -74,6 +74,13 @@ File browser with your custom configuration
 - `sh` / `sv` - Split horizontal/vertical
 - Shows hidden files, custom winbar
 
+#### lualine.nvim
+Custom statusline replacing snacks.nvim default
+- Auto theme matching your colorscheme
+- Shows: mode, branch, diff, diagnostics, filename, encoding, filetype, progress, location
+- Global statusline across all windows
+- Extensions for oil, quickfix, and fugitive
+
 #### oil.nvim
 File browser with your custom configuration
 - `-` - Open oil
