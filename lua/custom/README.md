@@ -14,7 +14,12 @@ lua/custom/
 │   ├── vscode.lua                # VSCode-neovim specific settings
 │   └── vscode-plugins.lua        # VSCode plugin loader
 └── plugins/                       # Custom plugin configurations
-    └── vim-visual-multi.lua      # Multiple cursors plugin
+    ├── flash.lua                  # Quick navigation
+    ├── lualine.lua               # Custom statusline
+    ├── mini-nvim.lua             # Mini suite plugins
+    ├── obsidian.lua              # OneDrive workspace override
+    ├── oil-nvim.lua              # File browser customizations
+    └── vim-visual-multi.lua      # Multiple cursors
 ```
 
 ## Your Customizations
@@ -67,13 +72,6 @@ Quick navigation with labeled jumps
 - Press `s` and wait 2 seconds → flash line jumping
 - This coexistence is achieved via `priority = 1000` on mini.nvim and `timeoutlen = 2000`
 
-#### oil.nvim
-File browser with your custom configuration
-- `-` - Open oil
-- `<leader>ef` - Edit files
-- `sh` / `sv` - Split horizontal/vertical
-- Shows hidden files, custom winbar
-
 #### lualine.nvim
 Custom statusline replacing snacks.nvim default
 - Auto theme matching your colorscheme
@@ -90,8 +88,10 @@ File browser with your custom configuration
 
 #### obsidian.nvim
 Custom workspace override pointing to OneDrive location
+- **Auto-detects platform:** Automatically uses correct path for Mac or Windows
 - **Mac path**: `~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian`
 - **Windows path**: `~/OneDrive - Örebro universitet/SCTO-Obsidian`
+- **No manual configuration needed** when switching between platforms
 
 ## Integration with jmbuhr's Config
 
@@ -130,8 +130,34 @@ Your `lua/custom/` directory won't conflict with upstream changes. Only two file
 
 ## Syncing Between Mac and Windows
 
-Both setups use the same `lua/custom/` structure:
+**Fully automatic cross-platform support!** Both setups use the same `lua/custom/` structure:
+
 - Custom configs are in `lua/custom/config/`
 - Custom plugins are in `lua/custom/plugins/`
-- Platform-specific settings are conditional on `vim.fn.has('win32')`
-- Paths are automatically adjusted per platform in plugin overrides
+- **Platform detection is automatic:**
+  - SQLite path: Only set on Windows (conditional in `config/options.lua`)
+  - OneDrive path: Auto-detected in `plugins/obsidian.lua`
+- **No manual changes needed** when switching between Mac and Windows
+
+### How It Works
+
+1. **SQLite** (`config/options.lua` lines 6-10):
+   ```lua
+   if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
+     vim.g.sqlite_clib_path = 'C:\\...\\sqlite3.dll'
+   end
+   ```
+
+2. **OneDrive** (`plugins/obsidian.lua` lines 5-10):
+   ```lua
+   local onedrive_path
+   if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
+     onedrive_path = '~/OneDrive - Örebro universitet/SCTO-Obsidian'
+   else
+     onedrive_path = '~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian'
+   end
+   ```
+
+3. **Pull and go**: Simply `git pull origin main` on either platform and it works!
+
+For detailed platform differences, see: `PLATFORM_DIFFERENCES.md` in the root directory.
