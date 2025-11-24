@@ -11,9 +11,9 @@ return {
     'saghen/blink.cmp',
     enabled = true,
     dev = false,
-    version = '0.*',
+    -- version = '*',
     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    -- build = 'cargo build --release',
+    build = 'cargo build --release',
     lazy = false,
     dependencies = {
       { 'rafamadriz/friendly-snippets' },
@@ -35,9 +35,6 @@ return {
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
-      fuzzy = {
-        implementation = 'lua',
-      },
       keymap = {
         preset = 'enter',
         ['<c-y>'] = { 'show', 'show_documentation', 'hide_documentation' },

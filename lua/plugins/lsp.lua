@@ -1,6 +1,5 @@
 return {
-
-  { -- for lsp features in code cells / embedded code
+  {
     'jmbuhr/otter.nvim',
     dev = false,
     dependencies = {
@@ -9,19 +8,52 @@ return {
         'nvim-treesitter/nvim-treesitter',
       },
     },
+    ---@type OtterConfig
     opts = {},
   },
 
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim' },
-      { 'williamboman/mason-lspconfig.nvim' },
-      { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
+      { 'mason-org/mason.nvim', opts = {} },
       {
-        'j-hui/fidget.nvim',
-        enabled = false,
-        opts = {},
+        'mason-org/mason-lspconfig.nvim',
+        opts = {
+          automatic_enable = false,
+          ensure_installed = {
+            'lua_ls',
+            'bashls',
+            'cssls',
+            'html',
+            'pyright',
+            'r_language_server',
+            'texlab',
+            'dotls',
+            'svelte',
+            'ts_ls',
+            'yamlls',
+            'clangd',
+            -- 'sqlls',
+            -- 'emmet_language_server',
+            -- 'hls',
+            -- 'julia-lsp'
+            -- 'rust-analyzer',
+            -- 'marksman',
+          },
+        },
+      },
+      {
+        'WhoIsSethDaniel/mason-tool-installer.nvim',
+        opts = {
+          ensure_installed = {
+            'black',
+            'stylua',
+            'shfmt',
+            'isort',
+            'tree-sitter-cli',
+            'jupytext',
+          },
+        },
       },
       {
         {
@@ -40,39 +72,8 @@ return {
     config = function()
       local util = require 'lspconfig.util'
 
-      require('mason').setup {
-        ensure_installed = {
-          'lua-language-server',
-          'bash-language-server',
-          'css-lsp',
-          'html-lsp',
-          'json-lsp',
-          'haskell-language-server',
-          'pyright',
-          'r-languageserver',
-          'texlab',
-          'dotls',
-          'svelte-language-server',
-          'typescript-language-server',
-          'yaml-language-server',
-          'clangd',
-          'emmet-ls',
-          'sqlls',
-        },
-      }
-      require('mason-tool-installer').setup {
-        ensure_installed = {
-          'black',
-          'stylua',
-          'shfmt',
-          'isort',
-          'tree-sitter-cli',
-          'jupytext',
-        },
-      }
-
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
         callback = function(event)
           local function map(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
@@ -95,42 +96,55 @@ return {
         debounce_text_changes = 150,
       }
 
-      local capabilities = require('blink.cmp').get_lsp_capabilities({}, true)
+      local capabilities
+      local has_blink, blink = pcall(require, 'blink')
+      if has_blink then
+        capabilities = blink.get_lsp_capabilities({}, true)
+      else
+        capabilities = vim.lsp.protocol.make_client_capabilities()
+      end
 
-      -------------------------------------------------------------------
-      -- Example: R language server
-      -------------------------------------------------------------------
-      vim.lsp.config('r_language_server', {
+      -- set defaults for all clients
+      vim.lsp.config('*', {
         capabilities = capabilities,
         flags = lsp_flags,
-        filetypes = { 'r', 'rmd', 'rmarkdown' },
+        root_markers = { '.git/' },
+      })
+
+      -- also needs:
+      -- $home/.config/marksman/config.toml :
+      -- [core]
+      -- markdown.file_extensions = ["md", "markdown", "qmd"]
+      -- vim.lsp.config.marksman = {
+      --   filetypes = { 'markdown', 'quarto' },
+      --   root_dir = util.root_pattern('.git', '.marksman.toml', '_quarto.yml'),
+      -- }
+
+      vim.lsp.config.r_language_server = {
+        filetypes = { 'r', 'rmd', 'rmarkdown' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
         settings = {
           r = {
             lsp = {
               rich_documentation = true,
-              diagnostics = { linters = 'none' },
             },
           },
         },
-      })
+      }
 
-      vim.lsp.config('cssls', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('svelte', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('yamlls', {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      vim.lsp.config.yamlls = {
         settings = {
-          yaml = { schemaStore = { enable = true, url = '' } },
+          yaml = {
+            schemaStore = {
+              enable = true,
+              url = '',
+            },
+          },
         },
-      })
-      vim.lsp.config('jsonls', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('texlab', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('dotls', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('tsserver', {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      }
+
+      vim.lsp.config.ts_ls = {
         filetypes = { 'js', 'javascript', 'typescript', 'ojs' },
-      })
+      }
 
       local function get_quarto_resource_path()
         local function strsplit(s, delimiter)
@@ -140,6 +154,7 @@ return {
           end
           return result
         end
+
         local f = assert(io.popen('quarto --paths', 'r'))
         local s = assert(f:read '*a')
         f:close()
@@ -147,48 +162,60 @@ return {
       end
 
       local lua_library_files = vim.api.nvim_get_runtime_file('', true)
+      local lua_plugin_paths = {}
       local resource_path = get_quarto_resource_path()
-      if resource_path then
-        table.insert(lua_library_files, resource_path .. '/lua-types')
-      else
+      if resource_path == nil then
         vim.notify_once 'quarto not found, lua library files not loaded'
+      else
+        table.insert(lua_library_files, resource_path .. '/lua-types')
+        table.insert(lua_plugin_paths, resource_path .. '/lua-plugin/plugin.lua')
       end
 
-      vim.lsp.config('lua_ls', {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      vim.lsp.config.lua_ls = {
         settings = {
           Lua = {
-            completion = { callSnippet = 'Replace' },
-            runtime = { version = 'LuaJIT' },
-            diagnostics = { disable = { 'trailing-space' } },
-            workspace = { checkThirdParty = false },
-            doc = { privateName = { '^_' } },
-            telemetry = { enable = false },
+            completion = {
+              callSnippet = 'Replace',
+            },
+            runtime = {
+              version = 'LuaJIT',
+            },
+            diagnostics = {
+              disable = { 'trailing-space' },
+            },
+            workspace = {
+              checkThirdParty = false,
+            },
+            doc = {
+              privateName = { '^_' },
+            },
+            telemetry = {
+              enable = false,
+            },
           },
         },
-      })
+      }
 
-      vim.lsp.config('vimls', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('julials', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('bashls', {
-        capabilities = capabilities,
-        flags = lsp_flags,
+      vim.lsp.bashls = {
         filetypes = { 'sh', 'bash' },
-      })
-      vim.lsp.config('clangd', { capabilities = capabilities, flags = lsp_flags })
-      vim.lsp.config('rust_analyzer', { capabilities = capabilities, flags = lsp_flags })
+      }
 
-      -- Disable watchers (pyright issue on Linux)
+      -- vim.lsp.config.hls = {
+      --   filetypes = { 'haskell', 'lhaskell', 'cabal' },
+      -- }
+
+      -- See https://github.com/neovim/neovim/issues/23291
+      -- disable lsp watcher.
+      -- Too lags on linux for python projects
+      -- because pyright and nvim both create too many watchers otherwise
       if capabilities.workspace == nil then
         capabilities.workspace = {}
         capabilities.workspace.didChangeWatchedFiles = {}
       end
       capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
-      vim.lsp.config('pyright', {
+      vim.lsp.config.pyright = {
         capabilities = capabilities,
-        flags = lsp_flags,
         settings = {
           python = {
             analysis = {
@@ -198,31 +225,35 @@ return {
             },
           },
         },
-        root_dir = function(fname)
-          return util.root_pattern('.git', 'setup.py', 'setup.cfg', 'pyproject.toml', 'requirements.txt')(fname)
-        end,
-      })
-
-      -------------------------------------------------------------------
-      -- Finally enable all defined servers
-      -------------------------------------------------------------------
-      vim.lsp.enable {
-        'r_language_server',
-        'cssls',
-        'svelte',
-        'yamlls',
-        'jsonls',
-        'texlab',
-        'dotls',
-        'tsserver',
-        'lua_ls',
-        'vimls',
-        'julials',
-        'bashls',
-        'clangd',
-        'rust_analyzer',
-        'pyright',
+        root_markers = { '.git', 'setup.py', 'setup.cfg', 'pyproject.toml', 'requirements.txt' },
       }
+
+      -- enable the servers
+      vim.lsp.enable 'r_language_server'
+      vim.lsp.enable 'cssls'
+      vim.lsp.enable 'html'
+      vim.lsp.enable 'emmet_language_server'
+      vim.lsp.enable 'svelte'
+      vim.lsp.enable 'jsonls'
+      vim.lsp.enable 'texlab'
+      -- vim.lsp.enable 'dotls'
+      vim.lsp.enable 'ts_ls'
+      vim.lsp.enable 'yamlls'
+      vim.lsp.enable 'clangd'
+      -- vim.lsp.enable 'marksman'
+      -- vim.lsp.enable 'sqlls'
+      -- vim.lsp.enable 'hls'
+      -- vim.lsp.enable 'julia-lsp'
+      vim.lsp.enable 'lua_ls'
+      vim.lsp.enable 'bashls'
+      vim.lsp.enable 'pyright'
+      vim.lsp.enable 'rust_analyzer'
+      -- vim.lsp.enable 'ruff_lsp'
+
+      -- android development
+      vim.lsp.enable 'kotlin_language_server'
+      vim.lsp.enable 'jdtls'
+
     end,
   },
 }

@@ -14,6 +14,20 @@ return {
         -- ui_select = false, -- replace `vim.ui.select` with the snacks picker
       },
       indent = {},
+      image = {
+        enabled = true,
+        doc = {
+          enabled = true,
+          -- inline = false,
+          -- float = true,
+          max_width = 60,
+          max_height = 10,
+          -- conceal = true,
+        },
+        math = {
+          enabled = false,
+        },
+      },
     },
   },
 }
