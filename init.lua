@@ -46,3 +46,6 @@ vim.cmd [[
   highlight CursorLineNr guibg=none
 ]]
 
+-- Load custom configurations (must be at the end)
+require 'custom'
+

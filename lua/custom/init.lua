@@ -1,15 +1,18 @@
--- Custom configuration loader
--- This file loads all your personal customizations on top of jmbuhr's config
+-- Custom Configuration Entry Point
+-- This file loads all custom configurations and overrides
 
--- Load VSCode-specific configuration if running in VSCode
+-- Check if running in VSCode
 if vim.g.vscode then
+  -- Load VSCode-specific configuration
   require 'custom.config.vscode'
-  return -- Don't load other customizations in VSCode
+  -- VSCode config handles its own plugin loading, so we return here
+  return
 end
 
--- Load custom options and keymaps (only in regular Neovim)
+-- For regular Neovim, load custom configurations
+-- Load custom options and keymaps
 require 'custom.config.options'
 require 'custom.config.keymaps'
 
--- Note: Custom plugins in lua/custom/plugins/ will be automatically loaded by lazy.nvim
--- if you add 'custom.plugins' to the lazy.setup() import in lua/config/lazy.lua
+-- Note: Custom plugins in lua/custom/plugins/ are automatically loaded by lazy.nvim
+-- via the import in lua/config/lazy.lua
