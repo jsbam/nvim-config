@@ -72,7 +72,75 @@ git fetch upstream
 git merge upstream/main
 ```
 
-Since your customizations are isolated in `lua/custom/`, upstream changes should merge cleanly without conflicts.
+### Merge Workflow
+
+Since your customizations are isolated in `lua/custom/`, **most** upstream changes should merge cleanly without conflicts.
+
+**However**, two files require manual attention during merges:
+
+#### 1. **`init.lua`** (Root file)
+**Your customizations that must be preserved:**
+- Line 17: `require 'custom'` - Loads custom configuration
+- Lines 19-22: VSCode detection and early return
+- Lines 44-45: Colorscheme preference (`oscura` instead of upstream default)
+- Lines 48-71: Transparent background and custom highlights
+
+**Merge strategy:**
+- If conflicts occur, accept upstream version first: `git checkout --theirs init.lua`
+- Then manually re-add the above customizations
+- Or use `git checkout --ours init.lua` and review upstream changes manually
+
+#### 2. **`lua/config/lazy.lua`**
+**Your customization that must be preserved:**
+- Line 17: `{ import = 'custom.plugins' }` in the setup call
+
+**Merge strategy:**
+- If conflicts occur, accept upstream version: `git checkout --theirs lua/config/lazy.lua`
+- Then add back `{ import = 'custom.plugins' }` to the setup array
+- Final line should look like: `require('lazy').setup({ { import = 'plugins' }, { import = 'custom.plugins' } }, {`
+
+### Resolving Conflicts
+
+If you encounter merge conflicts:
+
+1. **Check which files have conflicts:**
+   ```bash
+   git status
+   ```
+
+2. **For `init.lua` and `lua/config/lazy.lua`:** Use the strategies above
+
+3. **For `lua/plugins/*` files:** Accept upstream versions (your overrides are in `lua/custom/`)
+   ```bash
+   git checkout --theirs lua/plugins/completion.lua
+   git checkout --theirs lua/plugins/lsp.lua
+   git checkout --theirs lua/plugins/ui.lua
+   # etc.
+   ```
+
+4. **Stage resolved files:**
+   ```bash
+   git add <resolved-files>
+   ```
+
+5. **Complete the merge:**
+   ```bash
+   git commit
+   ```
+
+6. **Verify critical customizations:**
+   - ✅ `init.lua` contains `require 'custom'`
+   - ✅ `lua/config/lazy.lua` imports `custom.plugins`
+   - ✅ Your colorscheme preference is set
+
+### Post-Merge Checklist
+
+After merging upstream changes:
+- [ ] Restart Neovim and check for errors
+- [ ] Run `:Lazy sync` to update plugins
+- [ ] Verify custom plugins load correctly
+- [ ] Test LSP, completion, and custom keymaps
+- [ ] Sync changes to `~/AppData/Local/nvim` if needed
 
 ## VSCode Integration
 
