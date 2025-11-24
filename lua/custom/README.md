@@ -26,8 +26,9 @@ lua/custom/
 - **`<leader>%`** → save & source current file
 
 ### Options (`config/options.lua`)
-- Windows SQLite path for database plugins
+- Platform-specific SQLite path for database plugins (Windows only)
 - Vim-visual-multi configuration for multiple cursors
+- Extended timeout for flash + mini.surround coexistence
 
 ### VSCode-Neovim (`config/vscode.lua`)
 - Comprehensive VSCode command bindings
@@ -73,9 +74,26 @@ File browser with your custom configuration
 - `sh` / `sv` - Split horizontal/vertical
 - Shows hidden files, custom winbar
 
+#### oil.nvim
+File browser with your custom configuration
+- `-` - Open oil
+- `<leader>ef` - Edit files
+- `sh` / `sv` - Split horizontal/vertical
+- Shows hidden files, custom winbar
+
+#### obsidian.nvim
+Custom workspace override pointing to OneDrive location
+- **Mac path**: `~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian`
+- **Windows path**: `~/OneDrive - Örebro universitet/SCTO-Obsidian`
+
 ## Integration with jmbuhr's Config
 
 This custom config is loaded **after** jmbuhr's base configuration, so your settings will override or extend his where they conflict.
+
+### Git Repository Setup
+
+- **Origin**: `jsbam/nvim-config` (your fork)
+- **Upstream**: `jmbuhr/nvim-config` (original repo)
 
 ## Updating From Upstream
 
@@ -83,11 +101,30 @@ To pull updates from jmbuhr/nvim-config:
 
 ```bash
 cd ~/.config/nvim
-git pull origin main
+git fetch upstream
+git merge upstream/main
 ```
 
-Your `lua/custom/` directory won't conflict with upstream changes since it's gitignored by default.
+Your `lua/custom/` directory won't conflict with upstream changes. Only two files need manual re-application after upstream merges:
+1. `init.lua` - Add `require 'custom'` at the end
+2. `lua/config/lazy.lua` - Change `require('lazy').setup('plugins', {` to import custom.plugins
 
-## Backup Location
+## Platform-Specific Considerations
 
-Your previous config is backed up at: `~/.config/nvim-backup`
+### Mac (Current Setup)
+- OneDrive path: `~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian`
+- No SQLite path configuration needed (handled natively)
+- All Unix/Linux LSP servers work without issues
+
+### Windows (via jsbam/nvim-config)
+- OneDrive path: `~/OneDrive - Örebro universitet/SCTO-Obsidian`
+- SQLite path: `C:\ProgramData\chocolatey\lib\sqlite\tools\sqlite3.dll`
+- Some plugins (presenterm.nvim) may need to be disabled
+
+## Syncing Between Mac and Windows
+
+Both setups use the same `lua/custom/` structure:
+- Custom configs are in `lua/custom/config/`
+- Custom plugins are in `lua/custom/plugins/`
+- Platform-specific settings are conditional on `vim.fn.has('win32')`
+- Paths are automatically adjusted per platform in plugin overrides
