@@ -45,9 +45,27 @@ else
   vim.cmd.colorscheme 'oscura'
 end
 
+-- Transparent background if needed
+vim.cmd [[
+  highlight Normal guibg=none
+  highlight NonText guibg=none
+  highlight Normal ctermbg=none
+  highlight NonText ctermbg=none
+  highlight ColorColumn ctermbg=none
+  highlight ColorColumn guibg=none
+  highlight SignColumn ctermbg=none
+  highlight SignColumn guibg=none
+  highlight LineNr ctermbg=none
+  highlight LineNr guibg=none
+  highlight CursorLine ctermbg=none
+  highlight CursorLine guibg=none
+  highlight CursorLineNr ctermbg=none
+  highlight CursorLineNr ctermbg=none
+  highlight CursorLineNr guibg=none
+]]
+
 -- Terminal cursor color
 vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#A6E3A1', bg = '#A6E3A1' })
 
 -- Window separator color
 vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 'dimgray', bg = '' })
-

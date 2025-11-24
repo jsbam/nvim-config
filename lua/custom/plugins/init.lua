@@ -8,6 +8,7 @@ return {
   require 'custom.plugins.obsidian',
   require 'custom.plugins.presenterm',
   require 'custom.plugins.lsp-overrides',
+  require 'custom.plugins.oscura',
   
   -- Custom plugins (not in upstream)
   require 'custom.plugins.bufferline',
