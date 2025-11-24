@@ -2,7 +2,14 @@
 -- This file exports all custom plugins for lazy.nvim to load
 
 return {
-  -- Custom plugins
+  -- Custom plugin overrides (modify upstream plugin behavior)
+  require 'custom.plugins.lualine',
+  require 'custom.plugins.blink-cmp',
+  require 'custom.plugins.obsidian',
+  require 'custom.plugins.presenterm',
+  require 'custom.plugins.lsp-overrides',
+  
+  -- Custom plugins (not in upstream)
   require 'custom.plugins.bufferline',
   require 'custom.plugins.flash',
   require 'custom.plugins.vim-visual-multi',

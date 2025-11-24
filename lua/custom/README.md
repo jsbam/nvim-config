@@ -16,11 +16,16 @@ lua/custom/
 │   └── plugin-overrides.lua   # Configuration overrides for upstream plugins
 └── plugins/
     ├── init.lua               # Custom plugins entry point
-    ├── bufferline.lua         # Bufferline plugin
-    ├── flash.lua              # Flash navigation plugin
+    ├── lualine.lua            # Lualine statusline override
+    ├── blink-cmp.lua          # Blink.cmp completion override (Lua fuzzy)
+    ├── obsidian.lua           # Obsidian.nvim workspace override
+    ├── presenterm.lua         # Presenterm.nvim disabled on Windows
+    ├── lsp-overrides.lua      # LSP config override (Mason exclusions)
+    ├── bufferline.lua         # Bufferline plugin (from upstream)
+    ├── flash.lua              # Flash navigation plugin (from upstream)
     ├── vim-visual-multi.lua   # Multiple cursors plugin
-    ├── rainbow-delimiters.lua # Rainbow delimiters plugin
-    └── mini.lua               # Mini.nvim suite
+    ├── rainbow-delimiters.lua # Rainbow delimiters plugin (from upstream)
+    └── mini.lua               # Mini.nvim suite (from upstream)
 
 ```
 
@@ -170,9 +175,51 @@ opts = {
 
 **Note**: The Lua implementation works well for most use cases. If you need the performance of the Rust implementation, you would need to install Rust nightly and build from source with `build = 'cargo build --release'`.
 
+## Custom Plugin Overrides
+
+The following override files have been created to customize upstream plugin behavior while keeping upstream files clean for easy merging:
+
+### 1. **`lua/custom/plugins/lualine.lua`**
+- Overrides upstream lualine with custom statusline configuration
+- Includes macro recording indicator (📷[register])
+- Custom filename formatter that handles Oil buffers
+- Custom theme (oscura) and section separators
+
+### 2. **`lua/custom/plugins/blink-cmp.lua`**
+- Overrides upstream blink.cmp configuration
+- Uses Lua fuzzy implementation instead of Rust binaries (Windows compatibility)
+- Pins version to `0.*` instead of building from source
+- Avoids pre-built binary download issues on Windows/Git Bash
+
+### 3. **`lua/custom/plugins/obsidian.lua`**
+- Overrides upstream obsidian.nvim workspace configuration
+- Points to OneDrive location: `~/OneDrive - Örebro universitet/SCTO-Obsidian`
+- Resolves path configuration issues with default `~/notes` location
+
+### 4. **`lua/custom/plugins/presenterm.lua`**
+- Disables presenterm.nvim on Windows
+- Avoids LuaRocks path concatenation issues with Cygwin/Git Bash
+- Prevents installation errors with mixed path styles (C:\...\C:\...)
+
+### 5. **`lua/custom/plugins/lsp-overrides.lua`**
+- Removes `r-languageserver` from Mason's ensure_installed list
+- Uses system-wide R languageserver instead (installed via R's package manager)
+- Avoids PowerShell installation failures on Windows
+
+## Duplicate Plugins Status
+
+The following plugins exist in both `lua/plugins/` (upstream) and `lua/custom/plugins/` but are **identical**:
+- `bufferline.lua` - Identical to upstream
+- `flash.lua` - Identical to upstream
+- `mini.lua` - Identical to upstream
+- `rainbow-delimiters.lua` - Identical to upstream
+- `vim-visual-multi.lua` - Identical to upstream
+
+Since these are identical, the custom versions will take precedence through lazy.nvim's merge behavior, but there are no actual customizations. These can remain in both locations without issues.
+
 ## Notes
 
 - The main `init.lua` in the root remains minimal and clean
 - Upstream files in `lua/config/` and `lua/plugins/` are kept unmodified
-- Your custom LSP changes have been discarded in favor of upstream LSP config
-- Backups of the old config are saved as `init.lua.backup` and `lua/config/lazy.lua.backup`
+- All customizations are isolated in `lua/custom/` for conflict-free upstream merges
+- Custom plugins override upstream plugins automatically via lazy.nvim
