@@ -42,14 +42,20 @@ nvim --headless "+Lazy! build blink.cmp" +qa
 
 ## Persistent Setup
 
-Add to your shell profile (`~/.zshrc` or `~/.bashrc`):
+Rust environment is configured in `~/.zshenv` (zsh) or `~/.profile` (bash):
 
+**For zsh (Mac default):**
 ```bash
-# Rust environment
-source "$HOME/.cargo/env"
+# In ~/.zshenv
+. "$HOME/.cargo/env"
 ```
 
-This ensures cargo is available in all new shell sessions.
+**Why `.zshenv`?**
+- Sourced for all shell instances (interactive and non-interactive)
+- Ensures cargo is available to nvim, scripts, and GUI apps
+- Recommended over `.zshrc` for environment variables
+
+This ensures cargo is available in all contexts.
 
 ## Verification
 
