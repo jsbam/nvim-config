@@ -1,11 +1,6 @@
--- Custom presenterm.nvim configuration override
--- This overrides the upstream presenterm.lua to disable on Windows
--- due to LuaRocks path handling issues with Cygwin/Git Bash
-
+-- Override upstream presenterm.nvim to disable on Windows
+-- Due to LuaRocks path concatenation issues with Cygwin/Git Bash
 return {
-  {
-    'Piotr1215/presenterm.nvim',
-    -- Disable on Windows due to LuaRocks path concatenation issues
-    enabled = false,
-  },
+  "Piotr1215/presenterm.nvim",
+  enabled = vim.fn.has('win32') == 0,
 }

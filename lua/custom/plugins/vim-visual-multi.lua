@@ -1,8 +1,12 @@
--- lua/plugins/vim-visual-multi.lua
+-- Vim Visual Multi - Multiple cursors plugin
+-- This adds multiple cursor support similar to VSCode
+
 return {
   'mg979/vim-visual-multi',
-  branch = 'master',            -- optional
+  branch = 'master',
+  event = 'VeryLazy',
   init = function()
-    vim.g.VM_default_mappings = 0   -- your options here
+    -- Configuration is loaded from lua/custom/config/options.lua
+    -- where VM_maps is set
   end,
 }

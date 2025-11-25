@@ -14,7 +14,10 @@ require 'config.lazy-bootstrap'
 -- end
 -- vim.opt.runtimepath:prepend(lazypath)
 
-require('lazy').setup({ { import = 'plugins' }, { import = 'custom.plugins' } }, {
+require('lazy').setup({
+  { import = 'plugins' },
+  { import = 'custom.plugins' },
+}, {
   defaults = {
     version = false,
   },

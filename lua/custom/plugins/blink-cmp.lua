@@ -1,19 +1,13 @@
--- Custom blink.cmp configuration override
--- This overrides the upstream completion.lua to use Lua fuzzy implementation
--- instead of Rust binaries due to Windows compatibility issues
-
+-- Override blink.cmp configuration for Windows compatibility
+-- Uses Lua fuzzy implementation instead of Rust binaries to avoid build issues
 return {
-  {
-    'saghen/blink.cmp',
-    enabled = true,
-    dev = false,
-    version = '0.*', -- Pin to 0.* instead of upstream's commented version
-    -- build = 'cargo build --release', -- Commented out - using Lua implementation
-    opts = {
-      -- Use Lua fuzzy implementation instead of Rust for Windows compatibility
-      fuzzy = {
-        implementation = 'lua',
-      },
-    },
-  },
+  'saghen/blink.cmp',
+  -- Use version instead of building from source on Windows
+  build = vim.fn.has('win32') == 1 and nil or 'cargo build --release',
+  opts = function(_, opts)
+    -- Use Lua implementation for fuzzy matching (avoids Rust build on Windows)
+    opts.fuzzy = opts.fuzzy or {}
+    opts.fuzzy.implementation = 'lua'
+    return opts
+  end,
 }
