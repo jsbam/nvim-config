@@ -14,11 +14,14 @@ lua/custom/
 │   ├── vscode.lua                # VSCode-neovim specific settings
 │   └── vscode-plugins.lua        # VSCode plugin loader
 └── plugins/                       # Custom plugin configurations
+    ├── blink-cmp.lua             # Windows: Use Lua fuzzy (avoid Rust build)
     ├── flash.lua                  # Quick navigation
+    ├── lsp-overrides.lua         # Windows: Exclude r_language_server from Mason
     ├── lualine.lua               # Custom statusline
     ├── mini-nvim.lua             # Mini suite plugins
     ├── obsidian.lua              # OneDrive workspace override
     ├── oil-nvim.lua              # File browser customizations
+    ├── presenterm.lua            # Windows: Disable (LuaRocks path issues)
     └── vim-visual-multi.lua      # Multiple cursors
 ```
 
@@ -126,7 +129,10 @@ Your `lua/custom/` directory won't conflict with upstream changes. Only two file
 ### Windows (via jsbam/nvim-config)
 - OneDrive path: `~/OneDrive - Örebro universitet/SCTO-Obsidian`
 - SQLite path: `C:\ProgramData\chocolatey\lib\sqlite\tools\sqlite3.dll`
-- Some plugins (presenterm.nvim) may need to be disabled
+- **Plugin overrides** (auto-detected, no manual config needed):
+  - `blink-cmp.lua`: Uses Lua fuzzy implementation instead of Rust build
+  - `lsp-overrides.lua`: Excludes r_language_server from Mason (use R package manager)
+  - `presenterm.lua`: Disabled on Windows (LuaRocks path issues)
 
 ## Syncing Between Mac and Windows
 
