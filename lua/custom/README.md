@@ -1,21 +1,21 @@
 # Custom Configuration Directory
 
-This directory contains your personal Neovim customizations that extend jmbuhr's nvim-config.
+This directory contains your personal Neovim customizations that extend [jmbuhr's nvim-config](https://github.com/jmbuhr/nvim-config.git).
 
 ## Structure
 
 ```
 lua/custom/
-├── init.lua                       # Main loader for custom config
-├── README.md                      # This file
-├── config/                        # Custom configuration files
+├── init.lua                      # Main loader for custom config
+├── README.md                     # This file
+├── config/                       # Custom configuration files
 │   ├── options.lua               # Custom vim options
 │   ├── keymaps.lua               # Custom keybindings
 │   ├── vscode.lua                # VSCode-neovim specific settings
 │   └── vscode-plugins.lua        # VSCode plugin loader
-└── plugins/                       # Custom plugin configurations
+└── plugins/                      # Custom plugin configurations
     ├── blink-cmp.lua             # Windows: Use Lua fuzzy (avoid Rust build)
-    ├── flash.lua                  # Quick navigation
+    ├── flash.lua                 # Quick navigation
     ├── lsp-overrides.lua         # Windows: Exclude r_language_server from Mason
     ├── lualine.lua               # Custom statusline
     ├── mini-nvim.lua             # Mini suite plugins
@@ -25,20 +25,23 @@ lua/custom/
     └── vim-visual-multi.lua      # Multiple cursors
 ```
 
-## Your Customizations
+## My Customizations
 
 ### Regular Neovim (`config/keymaps.lua`)
+
 - **`jj`** in insert mode → escape to normal mode
 - **`<leader>oi`** → open init.lua
 - **`<leader>s`** → quick save
 - **`<leader>%`** → save & source current file
 
 ### Options (`config/options.lua`)
+
 - Platform-specific SQLite path for database plugins (Windows only)
 - Vim-visual-multi configuration for multiple cursors
 - Extended timeout for flash + mini.surround coexistence
 
 ### VSCode-Neovim (`config/vscode.lua`)
+
 - Comprehensive VSCode command bindings
 - File operations, search/replace, navigation
 - Window management
@@ -48,6 +51,7 @@ lua/custom/
 ### Plugins
 
 #### vim-visual-multi
+
 Multiple cursors support
 - `<leader>a` - Select/Visual all
 - `<leader>A` - Align
@@ -64,18 +68,22 @@ Suite of small independent plugins (loaded with high priority)
 - **mini.comment**: Comment lines (`gcc`)
 
 #### flash.nvim
+
 Quick navigation with labeled jumps
 - `s` (hold 2 sec) - Jump to line start (shows labels)
 - `S` - Treesitter selection
 - `f`/`F`/`t`/`T` - Enhanced with flash labels
 - `;` / `,` - Next/previous match
 
-**Note:** `s` key is shared between flash and mini.surround:
-- Quick `sa`/`sd`/`sr` (within 2 sec) → mini.surround
-- Press `s` and wait 2 seconds → flash line jumping
-- This coexistence is achieved via `priority = 1000` on mini.nvim and `timeoutlen = 2000`
+> [ !Note ]
+> ** `s` key is shared between flash and mini.surround:
+> - Quick `sa`/`sd`/`sr` (within 2 sec) → mini.surround
+> - Press `s` and wait 2 seconds → flash line jumping
+> - This coexistence is achieved via `priority = 1000` on mini.nvim and `timeoutlen = 2000`
+>
 
 #### lualine.nvim
+
 Custom statusline replacing snacks.nvim default
 - Auto theme matching your colorscheme
 - Shows: mode, branch, diff, diagnostics, filename, encoding, filetype, progress, location
@@ -83,13 +91,15 @@ Custom statusline replacing snacks.nvim default
 - Extensions for oil, quickfix, and fugitive
 
 #### oil.nvim
-File browser with your custom configuration
+
+File browser with my custom configuration
 - `-` - Open oil
 - `<leader>ef` - Edit files
 - `sh` / `sv` - Split horizontal/vertical
 - Shows hidden files, custom winbar
 
 #### obsidian.nvim
+
 Custom workspace override pointing to OneDrive location
 - **Auto-detects platform:** Automatically uses correct path for Mac or Windows
 - **Mac path**: `~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian`
@@ -102,31 +112,49 @@ This custom config is loaded **after** jmbuhr's base configuration, so your sett
 
 ### Git Repository Setup
 
-- **Origin**: `jsbam/nvim-config` (your fork)
-- **Upstream**: `jmbuhr/nvim-config` (original repo)
+- **Origin**: `jsbam/nvim-config` (my fork)
+- **Upstream**: `jmbuhr/nvim-config` (original/parent repo)
 
 ## Updating From Upstream
 
 To pull updates from jmbuhr/nvim-config:
 
 ```bash
-cd ~/.config/nvim
+cd ~/.config/nvim # cd ~/AppData/Local/nvim
 git fetch upstream
 git merge upstream/main
 ```
 
-Your `lua/custom/` directory won't conflict with upstream changes. Only two files need manual re-application after upstream merges:
+The `lua/custom/` directory won't conflict with upstream changes. Only two files need manual re-application after upstream merges:
 1. `init.lua` - Add `require 'custom'` at the end
-2. `lua/config/lazy.lua` - Change `require('lazy').setup('plugins', {` to import custom.plugins
+2. `lua/config/lazy.lua` - Change `require('lazy').setup('plugins', {` to import custom.plugins; from
+
+```
+require('lazy').setup({
+  { import = 'plugins' },
+}, {
+...
+```
+to 
+
+```
+require('lazy').setup({
+  { import = 'plugins' },
+  { import = 'custom.plugins' },
+}, {
+...
+```
 
 ## Platform-Specific Considerations
 
-### Mac (Current Setup)
+### Mac
+
 - OneDrive path: `~/Library/CloudStorage/OneDrive-Örebrouniversitet/SCTO-Obsidian`
 - No SQLite path configuration needed (handled natively)
 - All Unix/Linux LSP servers work without issues
 
-### Windows (via jsbam/nvim-config)
+### Windows
+
 - OneDrive path: `~/OneDrive - Örebro universitet/SCTO-Obsidian`
 - SQLite path: `C:\ProgramData\chocolatey\lib\sqlite\tools\sqlite3.dll`
 - **Plugin overrides** (auto-detected, no manual config needed):
@@ -148,6 +176,7 @@ Your `lua/custom/` directory won't conflict with upstream changes. Only two file
 ### How It Works
 
 1. **SQLite** (`config/options.lua` lines 6-10):
+
    ```lua
    if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
      vim.g.sqlite_clib_path = 'C:\\...\\sqlite3.dll'
@@ -155,6 +184,7 @@ Your `lua/custom/` directory won't conflict with upstream changes. Only two file
    ```
 
 2. **OneDrive** (`plugins/obsidian.lua` lines 5-10):
+
    ```lua
    local onedrive_path
    if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
@@ -164,6 +194,6 @@ Your `lua/custom/` directory won't conflict with upstream changes. Only two file
    end
    ```
 
-3. **Pull and go**: Simply `git pull origin main` on either platform and it works!
+3. **Pull and go**: Simply `git pull origin main` on either platform to apply changes made in `lua/custom` directory and it works!
 
 For detailed platform differences, see: `PLATFORM_DIFFERENCES.md` in the root directory.
