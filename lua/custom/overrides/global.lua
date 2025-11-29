@@ -26,11 +26,11 @@ vim.opt.clipboard = 'unnamedplus'
 vim.keymap.set('i', 'jj', '<Esc>', { desc = 'From I mode to N mode' })
 
 -- Vim-visual-multi settings for multiple cursors
-vim.g.VM_defaults_mappings = 1
-vim.g.VM_maps = {
-  ['Select All'] = '<leader>a',
-  ['Visual All'] = '<leader>a',
-  ['Align'] = '<leader>A',
-  ['Add Cursor Down'] = '<C-Down>',
-  ['Add Cursor Up'] = '<C-Up>',
-}
+-- vim.g.VM_defaults_mappings = 1
+-- vim.g.VM_maps = {
+--   ['Select All'] = '<leader>a',
+--   ['Visual All'] = '<leader>a',
+--   ['Align'] = '<leader>A',
+--   ['Add Cursor Down'] = '<C-Down>',
+--   ['Add Cursor Up'] = '<C-Up>',
+-- }

@@ -1,5 +1,6 @@
 -- VSCode-specific configuration
 -- Only loaded when running in VSCode context
+print '🔧 LOADED VSCODE mappings'
 
 if not vim.g.vscode then
   return
@@ -58,10 +59,10 @@ local mappings = {
   { 'n', '<leader>ep', 'editor.action.marker.prev' },
 
   -- Navigation
-  { 'n', 'Ctrl+h', 'workbench.action.navigateLeft' },
-  { 'n', 'Ctrl+l', 'workbench.action.navigateRight' },
-  { 'n', 'Ctrl+k', 'workbench.action.navigateUp' },
-  { 'n', 'Ctrl+j', 'workbench.action.navigateDown' },
+  { 'n', '<Ctrl-h>', 'workbench.action.navigateLeft' },
+  { 'n', '<Ctrl-l>', 'workbench.action.navigateRight' },
+  { 'n', '<Ctrl-k>', 'workbench.action.navigateUp' },
+  { 'n', '<Ctrl-j>', 'workbench.action.navigateDown' },
 
   -- Views
   { 'n', '<leader>e', 'workbench.view.explorer' },
@@ -92,4 +93,4 @@ for _, mapping in ipairs(mappings) do
 end
 
 -- Load VSCode-specific plugins
-require('custom.config.vscode-plugins')
+require 'custom.config.vscode-plugins'
