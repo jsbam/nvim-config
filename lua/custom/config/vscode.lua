@@ -59,10 +59,10 @@ local mappings = {
   { 'n', '<leader>ep', 'editor.action.marker.prev' },
 
   -- Navigation
-  { 'n', '<Ctrl-h>', 'workbench.action.navigateLeft' },
-  { 'n', '<Ctrl-l>', 'workbench.action.navigateRight' },
-  { 'n', '<Ctrl-k>', 'workbench.action.navigateUp' },
-  { 'n', '<Ctrl-j>', 'workbench.action.navigateDown' },
+  { 'n', '<C-h>', 'workbench.action.navigateLeft' },
+  { 'n', '<C-l>', 'workbench.action.navigateRight' },
+  { 'n', '<C-k>', 'workbench.action.navigateUp' },
+  { 'n', '<C-j>', 'workbench.action.navigateDown' },
 
   -- Views
   { 'n', '<leader>e', 'workbench.view.explorer' },
