@@ -15,6 +15,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Use system clipboard for all operations
+vim.opt.clipboard = 'unnamedplus'
+-- Show search matches as you type
+vim.opt.incsearch = true
+-- Ignore case unless uppercase letters are used
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 -- Move selected lines down in visual modes
 vim.keymap.set('x', 'J', ":move '>+1<CR>gv=gv", { desc = 'Move lines down', silent = true })
 
