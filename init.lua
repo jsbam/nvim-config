@@ -37,49 +37,6 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.wo[0][0].foldmethod = 'expr'
   end,
 })
-
-
-local use_minimal_default_colors = false
-
-if use_minimal_default_colors then
-  vim.cmd.colorscheme 'default'
-
-  -- reload colors module if it was already loaded
-  local mod = 'utils.colors'
-  if package.loaded[mod] then
-    package.loaded[mod] = nil
-  end
-
-  require(mod)
-else
-  -- Use oscura as default (custom preference)
-  vim.cmd.colorscheme 'oscura'
-end
-
--- Transparent background if needed
-vim.cmd [[
-  highlight Normal guibg=none
-  highlight NonText guibg=none
-  highlight Normal ctermbg=none
-  highlight NonText ctermbg=none
-  highlight ColorColumn ctermbg=none
-  highlight ColorColumn guibg=none
-  highlight SignColumn ctermbg=none
-  highlight SignColumn guibg=none
-  highlight LineNr ctermbg=none
-  highlight LineNr guibg=none
-  highlight CursorLine ctermbg=none
-  highlight CursorLine guibg=none
-  highlight CursorLineNr ctermbg=none
-  highlight CursorLineNr ctermbg=none
-  highlight CursorLineNr guibg=none
-]]
-
--- Terminal cursor color
-vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#A6E3A1', bg = '#A6E3A1' })
-
--- Window separator color
-vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 'dimgray', bg = '' })
 local use_minimal_default_colors = false
 
 if use_minimal_default_colors then
