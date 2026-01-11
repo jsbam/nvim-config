@@ -13,19 +13,21 @@ vim.g.mapleader = ' '
 -- vim.treesitter.language.add('quarto_markdown_inline', { path = "/usr/local/lib/libtree-sitter-markdown-inline.so" })
 -- vim.treesitter.language.register('quarto_markdown', { 'quarto', 'rmarkdown' })
 
--- Load custom configuration (handles VSCode, Windows-specific settings, etc.)
-require 'custom'
-
--- If running in VSCode, custom.init handles everything, so we're done
+-- If running in VSCode, load custom VSCode config and exit
 if vim.g.vscode then
+  require 'custom.config.vscode'
   return
 end
 
--- For regular Neovim, load the base configuration
+-- For regular Neovim, load the base configuration first
 require 'config.global'
 require 'config.lazy'
 require 'config.autocommands'
 require 'config.redir'
+
+-- Then load custom configuration (options and keymaps take precedence)
+require 'custom.config.options'
+require 'custom.config.keymaps'
 
 -- use latest treesitter
 vim.api.nvim_create_autocmd('FileType', {

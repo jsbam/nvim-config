@@ -33,6 +33,8 @@ vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- Paste over selected text without yanking it
+vim.keymap.set('x', 'p', '"_dP', { noremap = true, silent = true })
 -- Move selected lines down in visual modes
 vim.keymap.set('x', 'J', ":move '>+1<CR>gv=gv", { desc = 'Move lines down', silent = true })
 
