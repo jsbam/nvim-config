@@ -17,3 +17,5 @@ vim.keymap.set(
   '<Cmd>w | source %<CR>',
   { desc = 'Save & source current file', noremap = true, silent = true }
 )
+-- Use leader+V (capital V) to enter visual block mode (since Ctrl+v is intercepted by terminal)
+vim.keymap.set('n', '<leader>V', '<C-v>', { noremap = true, desc = 'Visual block mode' })

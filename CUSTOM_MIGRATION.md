@@ -16,15 +16,15 @@ All your personalizations have been organized into `lua/custom/`:
 
 ```
 lua/custom/
-├── init.lua                      # Main loader
-├── README.md                     # Documentation
-├── config/
-│   ├── keymaps.lua              # Your custom keybindings
-│   ├── options.lua              # Your vim options
-│   ├── vscode.lua               # VSCode integration
-│   └── vscode-plugins.lua       # VSCode plugin loader
-└── plugins/
-    └── vim-visual-multi.lua     # Multiple cursors plugin
+        ├── init.lua                      # Main loader
+        ├── README.md                     # Documentation
+        ├── config/
+        │   ├── keymaps.lua              # Your custom keybindings
+        │   ├── options.lua              # Your vim options
+        │   ├── vscode.lua               # VSCode integration
+        │   └── vscode-plugins.lua       # VSCode plugin loader
+        └── plugins/
+            └── vim-visual-multi.lua     # Multiple cursors plugin
 ```
 
 ### ✅ Integration Complete

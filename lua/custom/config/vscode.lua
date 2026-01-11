@@ -1,4 +1,3 @@
--- VSCode-specific configuration
 -- Only loaded when running in VSCode context
 print '🔧 LOADED VSCODE mappings'
 
@@ -14,6 +13,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+
+-- Prevent clipboard overwrite when pasting in visual mode
+vim.keymap.set('x', 'p', '"_dP', { noremap = true })
+vim.keymap.set('x', 'P', '"_dP', { noremap = true })
+
+-- Search settings
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+-- Clipboard
+vim.opt.clipboard = 'unnamedplus'
 
 -- Use system clipboard for all operations
 vim.opt.clipboard = 'unnamedplus'
