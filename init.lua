@@ -1,8 +1,9 @@
 -- Main Neovim Configuration Entry Point
 -- This config structure allows easy upstream updates while keeping customizations separate
+vim.g.sqlite_clib_path = "C:/Users/jsh001/AppData/Local/nvim-data/lazy/sqlite.lua/lua/sqlite/sqlite3.dll"
 
 -- Set leader key early
-vim.g.mapleader = ' '
+vim.g.mapleader = " "
 
 -- Optional treesitter language customizations (from upstream)
 -- vim.treesitter.language.add('pandoc_markdown', { path = "/usr/local/lib/libtree-sitter-pandoc-markdown.so" })
@@ -15,49 +16,49 @@ vim.g.mapleader = ' '
 
 -- If running in VSCode, load custom VSCode config and exit
 if vim.g.vscode then
-  require 'custom.config.vscode'
-  return
+	require("custom.config.vscode")
+	return
 end
 
 -- For regular Neovim, load the base configuration first
-require 'config.global'
-require 'config.lazy'
-require 'config.autocommands'
-require 'config.redir'
+require("config.global")
+require("config.lazy")
+require("config.autocommands")
+require("config.redir")
 
 -- Then load custom configuration (options and keymaps take precedence)
-require 'custom.config.options'
-require 'custom.config.keymaps'
+require("custom.config.options")
+require("custom.config.keymaps")
 
 -- use latest treesitter
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { '<filetype>' },
-  callback = function()
-    vim.treesitter.start()
-    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-    vim.wo[0][0].foldmethod = 'expr'
-  end,
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "<filetype>" },
+	callback = function()
+		vim.treesitter.start()
+		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		vim.wo[0][0].foldmethod = "expr"
+	end,
 })
 local use_minimal_default_colors = false
 
 if use_minimal_default_colors then
-  vim.cmd.colorscheme 'default'
+	vim.cmd.colorscheme("default")
 
-  -- reload colors module if it was already loaded
-  local mod = 'utils.colors'
-  if package.loaded[mod] then
-    package.loaded[mod] = nil
-  end
+	-- reload colors module if it was already loaded
+	local mod = "utils.colors"
+	if package.loaded[mod] then
+		package.loaded[mod] = nil
+	end
 
-  require(mod)
+	require(mod)
 else
-  -- Use oscura as default (custom preference)
-  vim.cmd.colorscheme 'oscura'
+	-- Use oscura as default (custom preference)
+	vim.cmd.colorscheme("oscura")
 end
 
 -- Transparent background if needed
-vim.cmd [[
+vim.cmd([[
   highlight Normal guibg=none
   highlight NonText guibg=none
   highlight Normal ctermbg=none
@@ -73,10 +74,10 @@ vim.cmd [[
   highlight CursorLineNr ctermbg=none
   highlight CursorLineNr ctermbg=none
   highlight CursorLineNr guibg=none
-]]
+]])
 
 -- Terminal cursor color
-vim.api.nvim_set_hl(0, 'TermCursor', { fg = '#A6E3A1', bg = '#A6E3A1' })
+vim.api.nvim_set_hl(0, "TermCursor", { fg = "#A6E3A1", bg = "#A6E3A1" })
 
 -- Window separator color
-vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 'dimgray', bg = '' })
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = "dimgray", bg = "" })
