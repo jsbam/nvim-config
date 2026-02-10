@@ -1,9 +1,14 @@
+---@diagnostic disable: undefined-global
 -- Main Neovim Configuration Entry Point
 -- This config structure allows easy upstream updates while keeping customizations separate
-vim.g.sqlite_clib_path = 'C:/Users/jsh001/AppData/Local/nvim-data/lazy/sqlite.lua/lua/sqlite/sqlite3.dll'
 
 -- Set leader key early
 vim.g.mapleader = ' '
+
+-- Set sqlite path for Windows
+if vim.fn.has 'win32' == 1 then
+  vim.g.sqlite_clib_path = 'C:/Users/jsh001/AppData/Local/nvim-data/lazy/sqlite.lua/lua/sqlite/sqlite3.dll'
+end
 
 -- Optional treesitter language customizations (from upstream)
 -- vim.treesitter.language.add('pandoc_markdown', { path = "/usr/local/lib/libtree-sitter-pandoc-markdown.so" })
