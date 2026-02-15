@@ -9,6 +9,7 @@ return {
   -- require 'custom.plugins.presenterm',
   require 'custom.plugins.lsp-overrides',
   require 'custom.plugins.treesitter-overrides',
+  require 'custom.plugins.which-key-overrides',
   require 'custom.plugins.oscura',
 
   -- Custom plugins (not in upstream)
