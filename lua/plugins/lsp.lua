@@ -15,7 +15,11 @@ return {
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'mason-org/mason.nvim', opts = {} },
+      {
+        'mason-org/mason.nvim',
+        opts = {},
+      },
+
       {
         'mason-org/mason-lspconfig.nvim',
         opts = {
@@ -120,9 +124,8 @@ return {
       --   filetypes = { 'markdown', 'quarto' },
       --   root_dir = util.root_pattern('.git', '.marksman.toml', '_quarto.yml'),
       -- }
-
       vim.lsp.config.r_language_server = {
-        filetypes = { 'r', 'rmd', 'rmarkdown' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+        filetypes = { 'r', 'rmd', 'rmarkdown' },
         settings = {
           r = {
             lsp = {
@@ -131,6 +134,17 @@ return {
           },
         },
       }
+      -- vim.lsp.config.r_language_server = {
+      --   cmd = { 'R', '--slave', '-e', 'languageserver::run()' },
+      --   filetypes = { 'r', 'rmd', 'rmarkdown' }, -- not directly using it for quarto (as that is handled by otter and often contains more languanges than just R)
+      --   settings = {
+      --     r = {
+      --       lsp = {
+      --         rich_documentation = true,
+      --       },
+      --     },
+      --   },
+      -- }
 
       vim.lsp.config.yamlls = {
         settings = {
@@ -235,8 +249,8 @@ return {
             language = 'en-US',
             markdown = {
               nodes = {
-                CodeBlock = "ignore",
-                FencedCodeBlock = "ignore",
+                CodeBlock = 'ignore',
+                FencedCodeBlock = 'ignore',
               },
             },
             additionalRules = {
@@ -244,8 +258,14 @@ return {
               motherTongue = 'de-DE',
             },
             disabledRules = {
-              ['en-US'] = { 'FILE_EXTENSIONS_CASE', 'COMMA_PARENTHESIS_WHITESPACE', 'MORFOLOGIK_RULE_EN_US', 'WHITESPACE_RULE', 'UPPERCASE_SENTENCE_START' },
-            }
+              ['en-US'] = {
+                'FILE_EXTENSIONS_CASE',
+                'COMMA_PARENTHESIS_WHITESPACE',
+                'MORFOLOGIK_RULE_EN_US',
+                'WHITESPACE_RULE',
+                'UPPERCASE_SENTENCE_START',
+              },
+            },
           },
         },
       }
@@ -276,7 +296,6 @@ return {
       -- android development
       vim.lsp.enable 'kotlin_language_server'
       vim.lsp.enable 'jdtls'
-
     end,
   },
 }

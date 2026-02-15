@@ -34,6 +34,7 @@ require 'config.redir'
 -- Then load custom configuration (options and keymaps take precedence)
 require 'custom.config.options'
 require 'custom.config.keymaps'
+require 'custom.config.autocommands'
 
 -- use latest treesitter
 vim.api.nvim_create_autocmd('FileType', {

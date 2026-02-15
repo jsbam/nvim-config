@@ -4,12 +4,13 @@
 return {
   -- Custom plugin overrides (modify upstream plugin behavior)
   require 'custom.plugins.lualine',
-  require 'custom.plugins.blink-cmp',
+  -- require 'custom.plugins.blink-cmp',
   require 'custom.plugins.obsidian',
-  require 'custom.plugins.presenterm',
+  -- require 'custom.plugins.presenterm',
   require 'custom.plugins.lsp-overrides',
+  require 'custom.plugins.treesitter-overrides',
   require 'custom.plugins.oscura',
-  
+
   -- Custom plugins (not in upstream)
   require 'custom.plugins.bufferline',
   require 'custom.plugins.flash',
