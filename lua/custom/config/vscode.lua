@@ -21,6 +21,8 @@ vim.keymap.set('x', 'P', '"_dP', { noremap = true })
 
 -- Use system clipboard for all operations
 vim.opt.clipboard = 'unnamedplus'
+-- ESC key to clear search highlights
+vim.keymap.set('n', '<ESC>', ':nohlsearch<CR>', { noremap = true, silent = true })
 -- Show search matches as you type
 vim.opt.incsearch = true
 -- Ignore case unless uppercase letters are used
@@ -65,6 +67,10 @@ local mappings = {
   { 'n', '<leader>yP', 'editor.action.copyLinesUpAction' },
   { 'n', '<leader>dp', 'editor.action.moveLinesDownAction' },
   { 'n', '<leader>dP', 'editor.action.moveLinesUpAction' },
+
+  -- comment with gcc
+  { 'n', 'gcc', 'editor.action.commentLine' },
+  { 'x', 'gc', 'editor.action.commentLine' },
 
   -- Code Actions
   { 'n', '<leader>cf', 'editor.action.formatDocument' },

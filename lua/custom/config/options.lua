@@ -27,6 +27,15 @@ vim.opt.clipboard = 'unnamedplus'
 -- jj to escape from insert mode
 vim.keymap.set('i', 'jj', '<Esc>', { desc = 'From I mode to N mode' })
 
+-- Fix shell/shellcmdflag mismatch (cross-platform safe).
+-- Git for Windows sets $SHELL to bash, but Neovim keeps cmd.exe's
+-- shellcmdflag (/s /c). On Mac/Linux this is a harmless no-op.
+if vim.o.shell:find 'bash' then
+  vim.o.shellcmdflag = '-c'
+  vim.o.shellquote = ''
+  vim.o.shellxquote = ''
+end
+
 -- Windows-specific: SQLite path for database plugins
 if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
   -- \\\\ in Lua strings → \\ on disk

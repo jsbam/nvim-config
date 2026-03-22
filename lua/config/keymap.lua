@@ -141,15 +141,24 @@ local function send_region()
   end
 end
 
--- send code with ctrl+Enter
--- just like in e.g. RStudio
+--- Send current line to REPL and move to next line (like RStudio Ctrl+Enter)
+local function send_line()
+  vim.fn['slime#send'](vim.api.nvim_get_current_line() .. '\r')
+  vim.cmd 'normal! j'
+end
+
+-- send code with ctrl+Enter / shift+Enter
+-- normal mode: send current line + move down (like RStudio)
+-- visual mode: send selection (mapped below)
 -- needs kitty (or other terminal) config:
 -- map shift+enter send_text all \x1b[13;2u
 -- map ctrl+enter send_text all \x1b[13;5u
-nmap('<c-cr>', send_cell)
-nmap('<s-cr>', send_cell)
-imap('<c-cr>', send_cell)
-imap('<s-cr>', send_cell)
+nmap('<c-cr>', send_line)
+nmap('<s-cr>', send_line)
+imap('<c-cr>', send_line)
+imap('<s-cr>', send_line)
+vmap('<c-cr>', send_region)
+vmap('<s-cr>', send_region)
 
 --- Show R dataframe in the browser
 -- might not use what you think should be your default web browser
@@ -166,6 +175,8 @@ end
 -- keep selection after indent/dedent
 vmap('>', '>gv')
 vmap('<', '<gv')
+-- send selected lines to REPL
+vmap('<cr>', send_region, 'run code region')
 
 -- center after search and jumps
 nmap('n', 'nzz')
@@ -419,7 +430,7 @@ wk.add({
     -- { '<leader>e', group = '[t]mux' },
     -- replace the two dummy `<leader>e` lines with ONE real mapping
     { '<leader>e', '<cmd>Oil<cr>', desc = 'toggle file [e]xplorer (Oil)' },
-    { '<leader>m', '<cmd>Oil --float<cr>', desc = 'focus explorer ([m]aximise Oil)' },
+
     -- { '<leader>e', '<cmd>Neotree toggle<cr>', desc = 'toggle file [e]xplorer (Oil)' },
     { '<leader>fd', [[eval "$(tmux showenv -s DISPLAY)"]], desc = '[d]isplay fix' },
     { '<leader>f', group = '[f]ind (telescope)' },

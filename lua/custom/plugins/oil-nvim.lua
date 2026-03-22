@@ -34,10 +34,10 @@ return {
 
     require('oil').setup(opts)
   end,
-  dependencies = { 'nvim-tree/nvim-web-devicons' },
+  dependencies = { 'nvim-mini/mini.icons' },
   keys = {
     { '-', ':Oil<cr>', desc = 'oil' },
-    { '<leader>ef', ':Oil<cr>', desc = 'edit [f]iles' },
+    { '<leader>eo', ':Oil<cr>', desc = 'open Oil in current window' },
   },
   cmd = 'Oil',
 }

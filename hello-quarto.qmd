@@ -1,0 +1,29 @@
+---
+author: "Your Name"
+title: "Hello, Quarto!"
+format: html
+---
+
+## Hello, Quarto!
+
+This is a simple Quarto document. You can write text, include code, and create beautiful reports with ease.
+
+### R Code Example
+
+```{r} 
+print("Hello, Quarto!")
+
+x <- 1:10
+x
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Weight vs. Miles Per Gallon",
+       x = "Weight (wt)",
+       y = "Miles Per Gallon (mpg)")
+
+```
