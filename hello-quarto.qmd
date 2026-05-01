@@ -17,13 +17,15 @@ x <- 1:10
 x
 ```
 
+$\beta (a+b)^2$
 
 ```{r}
 library(ggplot2)
 ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
-  labs(title = "Scatter Plot of Weight vs. Miles Per Gallon",
-       x = "Weight (wt)",
-       y = "Miles Per Gallon (mpg)")
-
+  labs(
+    title = "Scatter Plot of Weight vs. Miles Per Gallon",
+    x = "Weight (wt)",
+    y = "Miles Per Gallon (mpg)"
+  )
 ```
