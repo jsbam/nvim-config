@@ -4,16 +4,6 @@ if not vim.g.vscode then
   return
 end
 
--- Show an ephemeral startup message in the command/status area for 3s
-vim.schedule(function()
-  -- Use nvim_echo so message appears without constantly reprinting
-  pcall(vim.api.nvim_echo, {{'🔧 LOADED VSCODE mappings', 'MoreMsg'}}, false, {})
-  -- Clear the echo area after a short delay
-  vim.defer_fn(function()
-    pcall(vim.cmd, 'echo ""')
-  end, 3000)
-end)
-
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
