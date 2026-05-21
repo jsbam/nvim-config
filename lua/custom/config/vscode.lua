@@ -4,16 +4,6 @@ if not vim.g.vscode then
   return
 end
 
--- Show an ephemeral startup message in the command/status area for 3s
-vim.schedule(function()
-  -- Use nvim_echo so message appears without constantly reprinting
-  pcall(vim.api.nvim_echo, {{'🔧 LOADED VSCODE mappings', 'MoreMsg'}}, false, {})
-  -- Clear the echo area after a short delay
-  vim.defer_fn(function()
-    pcall(vim.cmd, 'echo ""')
-  end, 3000)
-end)
-
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
@@ -77,8 +67,8 @@ local mappings = {
   { 'n', '<leader>dP', 'editor.action.moveLinesUpAction' },
 
   -- comment with gcc
-  { 'n', 'gcc', 'editor.action.commentLine' },
-  { 'x', 'gc', 'editor.action.commentLine' },
+  { 'n', 'gcc',        'editor.action.commentLine' },
+  { 'x', 'gc',         'editor.action.commentLine' },
 
   -- Code Actions
   { 'n', '<leader>cf', 'editor.action.formatDocument' },
@@ -87,13 +77,13 @@ local mappings = {
   { 'n', '<leader>ep', 'editor.action.marker.prev' },
 
   -- Navigation
-  { 'n', '<C-h>', 'workbench.action.navigateLeft' },
-  { 'n', '<C-l>', 'workbench.action.navigateRight' },
-  { 'n', '<C-k>', 'workbench.action.navigateUp' },
-  { 'n', '<C-j>', 'workbench.action.navigateDown' },
+  { 'n', '<C-h>',      'workbench.action.navigateLeft' },
+  { 'n', '<C-l>',      'workbench.action.navigateRight' },
+  { 'n', '<C-k>',      'workbench.action.navigateUp' },
+  { 'n', '<C-j>',      'workbench.action.navigateDown' },
 
   -- Views
-  { 'n', '<leader>e', 'workbench.view.explorer' },
+  { 'n', '<leader>e',  'workbench.view.explorer' },
   { 'n', '<leader>tt', 'workbench.action.terminal.toggleTerminal' },
   { 'n', '<leader>tc', 'workbench.panel.positronConsole.focus' },
 

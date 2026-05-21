@@ -179,34 +179,6 @@ local vscode_plugins = {
       },
     },
   },
-  -- {
-  --   'folke/flash.nvim',
-  --   event = 'VeryLazy',
-  --   opts = {
-  --     modes = {
-  --       char = {
-  --         jump_labels = true,
-  --         multi_line = true,
-  --         highlight = { backdrop = false },
-  --       },
-  --     },
-  --   },
-  --   keys = {
-  --     -- 's' for jumping to line start
-  --     {
-  --       's',
-  --       mode = { 'n', 'x', 'o' },
-  --       function()
-  --         require('flash').jump {
-  --           search = { mode = 'search', max_length = 0 },
-  --           label = { after = { 0, 0 } },
-  --           pattern = '^',
-  --         }
-  --       end,
-  --       desc = 'Flash jump to line',
-  --     },
-  --   },
-  -- },
 }
 
 require('lazy').setup(vscode_plugins, {
