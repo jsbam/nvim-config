@@ -13,6 +13,114 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+local cursor_group = vim.api.nvim_create_augroup('vscode-restore-cursor', { clear = true })
+local cursor_db_path = vim.fn.stdpath 'data' .. '\\vscode-cursor-positions.json'
+local cursor_db = nil
+
+local function is_real_file_buffer()
+  local bt = vim.bo.buftype
+  if bt ~= '' and bt ~= 'acwrite' then
+    return false
+  end
+
+  local name = vim.api.nvim_buf_get_name(0)
+  return name ~= '' and not name:match '^term://'
+end
+
+local function cursor_key()
+  local name = vim.api.nvim_buf_get_name(0)
+  if name:match '^[a-z]+://' then
+    return name
+  end
+  return vim.fn.fnamemodify(name, ':p')
+end
+
+local function load_cursor_db()
+  if cursor_db ~= nil then
+    return
+  end
+
+  cursor_db = {}
+  local ok, lines = pcall(vim.fn.readfile, cursor_db_path)
+  if not ok or not lines or #lines == 0 then
+    return
+  end
+
+  local decoded_ok, decoded = pcall(vim.json.decode, table.concat(lines, '\n'))
+  if decoded_ok and type(decoded) == 'table' then
+    cursor_db = decoded
+  end
+end
+
+local function save_cursor_db()
+  if cursor_db == nil then
+    return
+  end
+
+  local ok, encoded = pcall(vim.json.encode, cursor_db)
+  if not ok then
+    return
+  end
+
+  pcall(vim.fn.writefile, { encoded }, cursor_db_path)
+end
+
+local function remember_cursor_position()
+  if not is_real_file_buffer() then
+    return
+  end
+
+  load_cursor_db()
+  local key = cursor_key()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  cursor_db[key] = { line = pos[1], col = pos[2] }
+  save_cursor_db()
+end
+
+local function restore_last_cursor_position()
+  if not is_real_file_buffer() then
+    return
+  end
+
+  load_cursor_db()
+  local key = cursor_key()
+  local saved = cursor_db and cursor_db[key] or nil
+  if type(saved) == 'table' and type(saved.line) == 'number' and type(saved.col) == 'number' then
+    local last = vim.fn.line '$'
+    if saved.line > 0 and saved.line <= last then
+      pcall(vim.api.nvim_win_set_cursor, 0, { saved.line, math.max(saved.col, 0) })
+      return
+    end
+  end
+
+  local line = vim.fn.line [["]]
+  local col = vim.fn.col [["]]
+  local last = vim.fn.line '$'
+
+  if line > 0 and line <= last then
+    pcall(vim.api.nvim_win_set_cursor, 0, { line, math.max(col - 1, 0) })
+  end
+end
+
+-- Persist marks/shada in VSCode sessions (embedded nvim may not flush on close)
+vim.api.nvim_create_autocmd({ 'BufLeave', 'BufWinLeave', 'VimLeavePre' }, {
+  group = cursor_group,
+  callback = function()
+    if is_real_file_buffer() then
+      remember_cursor_position()
+      pcall(vim.cmd, 'silent! wshada!')
+    end
+  end,
+})
+
+-- Restore after open and once again after VSCode finishes focusing/rendering the editor
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWinEnter', 'BufEnter' }, {
+  group = cursor_group,
+  callback = function()
+    vim.schedule(restore_last_cursor_position)
+    vim.defer_fn(restore_last_cursor_position, 120)
+  end,
+})
 -- Prevent clipboard overwrite when pasting in visual mode
 vim.keymap.set('x', 'p', '"_dP', { noremap = true })
 vim.keymap.set('x', 'P', '"_dP', { noremap = true })
@@ -67,8 +175,8 @@ local mappings = {
   { 'n', '<leader>dP', 'editor.action.moveLinesUpAction' },
 
   -- comment with gcc
-  { 'n', 'gcc',        'editor.action.commentLine' },
-  { 'x', 'gc',         'editor.action.commentLine' },
+  { 'n', 'gcc', 'editor.action.commentLine' },
+  { 'x', 'gc', 'editor.action.commentLine' },
 
   -- Code Actions
   { 'n', '<leader>cf', 'editor.action.formatDocument' },
@@ -77,13 +185,13 @@ local mappings = {
   { 'n', '<leader>ep', 'editor.action.marker.prev' },
 
   -- Navigation
-  { 'n', '<C-h>',      'workbench.action.navigateLeft' },
-  { 'n', '<C-l>',      'workbench.action.navigateRight' },
-  { 'n', '<C-k>',      'workbench.action.navigateUp' },
-  { 'n', '<C-j>',      'workbench.action.navigateDown' },
+  { 'n', '<C-h>', 'workbench.action.navigateLeft' },
+  { 'n', '<C-l>', 'workbench.action.navigateRight' },
+  { 'n', '<C-k>', 'workbench.action.navigateUp' },
+  { 'n', '<C-j>', 'workbench.action.navigateDown' },
 
   -- Views
-  { 'n', '<leader>e',  'workbench.view.explorer' },
+  { 'n', '<leader>e', 'workbench.view.explorer' },
   { 'n', '<leader>tt', 'workbench.action.terminal.toggleTerminal' },
   { 'n', '<leader>tc', 'workbench.panel.positronConsole.focus' },
 
