@@ -135,6 +135,12 @@ vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+vim.keymap.set(
+  "n",
+  "<leader>sr",
+  [[:%s/\<<C-r><C-w>\>/]],
+  { desc = "Replace word under cursor globally in current file" }
+)
 -- Paste over selected text without yanking it
 vim.keymap.set('x', 'p', '"_dP', { noremap = true, silent = true })
 -- Move selected lines down in visual modes
@@ -147,7 +153,7 @@ local opts = { noremap = true, silent = true }
 
 local mappings = {
   -- editing
-  { 'n', '<leader>A', 'editor.action.selectAll' },
+  { 'n', '<leader>A',  'editor.action.selectAll' },
 
   -- File & Workspace Management
   { 'n', '<leader>rw', 'workbench.action.reloadWindow' },
@@ -178,8 +184,8 @@ local mappings = {
   { 'n', '<leader>dP', 'editor.action.moveLinesUpAction' },
 
   -- comment with gcc
-  { 'n', 'gcc', 'editor.action.commentLine' },
-  { 'x', 'gc', 'editor.action.commentLine' },
+  { 'n', 'gcc',        'editor.action.commentLine' },
+  { 'x', 'gc',         'editor.action.commentLine' },
 
   -- Code Actions
   { 'n', '<leader>cf', 'editor.action.formatDocument' },
@@ -188,13 +194,13 @@ local mappings = {
   { 'n', '<leader>ep', 'editor.action.marker.prev' },
 
   -- Navigation
-  { 'n', '<C-h>', 'workbench.action.navigateLeft' },
-  { 'n', '<C-l>', 'workbench.action.navigateRight' },
-  { 'n', '<C-k>', 'workbench.action.navigateUp' },
-  { 'n', '<C-j>', 'workbench.action.navigateDown' },
+  { 'n', '<C-h>',      'workbench.action.navigateLeft' },
+  { 'n', '<C-l>',      'workbench.action.navigateRight' },
+  { 'n', '<C-k>',      'workbench.action.navigateUp' },
+  { 'n', '<C-j>',      'workbench.action.navigateDown' },
 
   -- Views
-  { 'n', '<leader>e', 'workbench.view.explorer' },
+  { 'n', '<leader>e',  'workbench.view.explorer' },
   { 'n', '<leader>tt', 'workbench.action.terminal.toggleTerminal' },
   { 'n', '<leader>tc', 'workbench.panel.positronConsole.focus' },
 

@@ -54,19 +54,18 @@ local vscode_plugins = {
         ['Add Cursor Down'] = '<C-d>',
         ['Add Cursor Up'] = '<C-u>',
         ['Switch Mode'] = '<Tab>',
-        ['Remove Region'] = 'Q',             -- remove current cursor position, move cursor backward.
-        ['Skip Region'] = 'q',               -- skip current cursor position.
-        ['Mouse Cursor'] = '<C-LeftMouse>',  -- add VM-cursor with mouse click
+        ['Remove Region'] = 'Q', -- remove current cursor position, move cursor backward.
+        ['Skip Region'] = 'q', -- skip current cursor position.
+        ['Mouse Cursor'] = '<C-LeftMouse>', -- add VM-cursor with mouse click
         ['Mouse Column'] = '<C-RightMouse>', -- add VM-cursor to column with mouse click
-        ['Move Right'] = '<S-Right>',
-        ['Move Left'] = '<S-Left>',
+        -- ['Move Right'] = '<S-Right>',
+        -- ['Move Left'] = '<S-Left>',
         -- Visual mode mappings (disabled, using direct <Plug> mappings below)
         ['Toggle Single Region'] = '',
         ['Visual Cursors'] = '',
         ['Visual Add'] = '',
         ['Visual Find'] = '',
         ['Visual Regex'] = '',
-
       })
     end,
     config = function()
@@ -80,9 +79,9 @@ local vscode_plugins = {
 
       local function vm_visual_end_mode()
         local replace = vim.api.nvim_replace_termcodes
-        vm_visual_insert("A")
+        vm_visual_insert 'A'
         vim.defer_fn(function()
-          vim.api.nvim_feedkeys(replace("<Esc>", true, false, true), "n", false)
+          vim.api.nvim_feedkeys(replace('<Esc>', true, false, true), 'n', false)
         end, 60)
       end
 
@@ -98,7 +97,6 @@ local vscode_plugins = {
       vim.keymap.set('x', '<leader>mv', function()
         vm_visual_end_mode()
       end, { desc = 'Multi-cursor at line end (VM mode)' })
-
 
       vim.keymap.set('n', '<leader>ma', '<Plug>(VM-Select-All)<Tab>', {
         remap = true,
