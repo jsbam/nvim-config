@@ -146,6 +146,9 @@ vim.keymap.set('x', 'K', ":move '<-2<CR>gv=gv", { desc = 'Move lines up', silent
 local opts = { noremap = true, silent = true }
 
 local mappings = {
+  -- editing
+  { 'n', '<leader>A', 'editor.action.selectAll' },
+
   -- File & Workspace Management
   { 'n', '<leader>rw', 'workbench.action.reloadWindow' },
   { 'n', '<leader>os', 'workbench.action.openSettingsJson' },
