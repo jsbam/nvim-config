@@ -13,8 +13,16 @@ vim.keymap.set('i', 'jj', '<Esc>', { desc = 'From I mode to N mode' })
 -- Open init.lua
 nmap('<leader>oi', ':e ' .. config .. '<cr>', 'Open init.lua')
 
--- Quick save
-nmap('<leader>s', ':w<cr>', 'Save file')
+-- Search and replace word under cursor in current file
+vim.keymap.set(
+  "n",
+  "<leader>sr",
+  [[:%s/\<<C-r><C-w>\>/]],
+  { desc = "Replace word under cursor globally in current file" }
+)
+
+-- -- Quick save
+-- nmap('<C-s>', ':w<cr>', 'Save file')
 
 -- Save & source current file
 vim.keymap.set(
@@ -94,23 +102,29 @@ local function send_r_expression()
     local code = line:match '^([^#]*)' or line
 
     for c in code:gmatch '.' do
-      if c == '(' then paren = paren + 1
-      elseif c == ')' then paren = paren - 1
-      elseif c == '[' then bracket = bracket + 1
-      elseif c == ']' then bracket = bracket - 1
-      elseif c == '{' then brace = brace + 1
-      elseif c == '}' then brace = brace - 1
+      if c == '(' then
+        paren = paren + 1
+      elseif c == ')' then
+        paren = paren - 1
+      elseif c == '[' then
+        bracket = bracket + 1
+      elseif c == ']' then
+        bracket = bracket - 1
+      elseif c == '{' then
+        brace = brace + 1
+      elseif c == '}' then
+        brace = brace - 1
       end
     end
 
     local trimmed = vim.trim(code)
     local continues = (paren > 0 or bracket > 0 or brace > 0)
-      or trimmed:match '|>$'       -- base R pipe
-      or trimmed:match '%%>%%$'    -- magrittr pipe
-      or trimmed:match '%%<>%%$'   -- magrittr assignment pipe
-      or trimmed:match '%+$'       -- ggplot +
-      or trimmed:match ',$'        -- trailing comma
-      or trimmed:match '<%-$'      -- assignment at end of line
+        or trimmed:match '|>$'     -- base R pipe
+        or trimmed:match '%%>%%$'  -- magrittr pipe
+        or trimmed:match '%%<>%%$' -- magrittr assignment pipe
+        or trimmed:match '%+$'     -- ggplot +
+        or trimmed:match ',$'      -- trailing comma
+        or trimmed:match '<%-$'    -- assignment at end of line
 
     i = i + 1
     if not continues then break end
