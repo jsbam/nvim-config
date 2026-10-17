@@ -136,10 +136,10 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 vim.keymap.set(
-  "n",
-  "<leader>sr",
+  'n',
+  '<leader>sr',
   [[:%s/\<<C-r><C-w>\>/]],
-  { desc = "Replace word under cursor globally in current file" }
+  { desc = 'Replace word under cursor globally in current file' }
 )
 -- Paste over selected text without yanking it
 vim.keymap.set('x', 'p', '"_dP', { noremap = true, silent = true })

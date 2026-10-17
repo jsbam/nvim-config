@@ -7,9 +7,8 @@ vim.g.mapleader = ' '
 
 -- Set sqlite path for Windows
 if vim.fn.has 'win32' == 1 then
-  vim.g.sqlite_clib_path = 'C:/Users/jsh001/AppData/Local/nvim-data/lazy/sqlite.lua/lua/sqlite/sqlite3.dll'
+  vim.g.sqlite_clib_path = vim.fn.stdpath('data') .. '/lazy/sqlite.lua/lua/sqlite/sqlite3.dll'
 end
-
 -- Optional treesitter language customizations (from upstream)
 -- vim.treesitter.language.add('pandoc_markdown', { path = "/usr/local/lib/libtree-sitter-pandoc-markdown.so" })
 -- vim.treesitter.language.add('pandoc_markdown_inline', { path = "/usr/local/lib/libtree-sitter-pandoc-markdown-inline.so" })
@@ -35,6 +34,7 @@ require 'config.redir'
 require 'custom.config.options'
 require 'custom.config.keymaps'
 require 'custom.config.autocommands'
+require 'custom.overrides.keymap-overrides'
 
 -- use latest treesitter
 vim.api.nvim_create_autocmd('FileType', {

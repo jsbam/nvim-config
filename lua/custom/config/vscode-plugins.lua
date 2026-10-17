@@ -223,7 +223,6 @@ local vscode_plugins = {
       },
     },
   },
-
   {
     'nvim-mini/mini.jump2d',
     version = '*',
@@ -232,7 +231,6 @@ local vscode_plugins = {
       vim.keymap.set({ 'n', 'x', 'o' }, 'z', '<Cmd>lua MiniJump2d.start()<CR>', { desc = 'Jump via mini.jump2d' })
     end,
   },
-
   {
     'kevinhwang91/nvim-hlslens',
     event = 'VeryLazy',
