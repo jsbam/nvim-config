@@ -56,7 +56,7 @@ return {
           style = "inline", -- or "overlay"
         },
         -- Highlight matches
-        highlight = { backdrop = false },
+        highlight = { backdrop = true },
         -- Key mappings
         keys = { "f", "F", "t", "T", ";", "," },
         char_actions = function(motion)

@@ -41,6 +41,8 @@ local vscode_plugins = {
       -- Must be set BEFORE plugin loads
       vim.g.VM_default_mappings = 0
       vim.g.VM_quit_after_leaving_insert_mode = 0
+      vim.g.VM_mouse_mappings = 1
+      vim.g.VM_add_cursor_at_pos_no_mappings = 1
       vim.g.VM_maps = vim.tbl_extend('force', vim.g.VM_maps or {}, {
         ['Exit'] = '<Esc><Esc>',
         ['Find Under'] = '<C-n>',
@@ -58,8 +60,8 @@ local vscode_plugins = {
         ['Skip Region'] = 'q', -- skip current cursor position.
         ['Mouse Cursor'] = '<C-LeftMouse>', -- add VM-cursor with mouse click
         ['Mouse Column'] = '<C-RightMouse>', -- add VM-cursor to column with mouse click
-        -- ['Move Right'] = '<S-Right>',
-        -- ['Move Left'] = '<S-Left>',
+        ['Move Right'] = '<S-Right>',
+        ['Move Left'] = '<S-Left>',
         -- Visual mode mappings (disabled, using direct <Plug> mappings below)
         ['Toggle Single Region'] = '',
         ['Visual Cursors'] = '',
@@ -116,36 +118,80 @@ local vscode_plugins = {
         remap = true,
         desc = 'Toggle Mapping',
       })
+      -- to make S-arrows to move VM-multi-cursors
+      vim.keymap.set('n', '<S-Up>', '<Plug>(VM-Motion-k)', { remap = true })
+      vim.keymap.set('n', '<S-Down>', '<Plug>(VM-Motion-j)', { remap = true })
+      vim.keymap.set('n', '<S-Left>', '<Plug>(VM-Motion-h)', { remap = true })
+      vim.keymap.set('n', '<S-Right>', '<Plug>(VM-Motion-l)', { remap = true })
     end,
   },
 
   -- Flash (quick navigation)
   {
     'folke/flash.nvim',
+    enabled = true,
     event = 'VeryLazy',
-    ---@type Flash.Config
+    --@type Flash.config
     opts = {
+      labels = 'asdfghjklqwertyuiopzxcvbnm',
+      search = {
+        -- search/jump in all windows
+        multi_window = true,
+      },
+      jump = {
+        -- save location in the jumplist
+        jumplist = true,
+      },
+      label = {
+        -- allow uppercase labels
+        uppercase = true,
+        -- add any labels with the correct case here, that you want to exclude
+        exclude = '',
+        -- labels appear after the match
+        after = true, ---@type boolean|number[]
+        before = false, ---@type boolean|number[]
+      },
       modes = {
         search = {
           enabled = true,
         },
         char = {
+          enabled = true,
           jump_labels = true,
+          -- Multi-line f/F/t/T
+          multi_line = true,
+          -- Label configuration - make labels appear AFTER the character
+          label = {
+            exclude = 'hjkliardc',
+            after = { 0, 0 }, -- Show label after matched char
+            before = false,
+            style = 'inline', -- or "overlay"
+          },
+          -- Highlight matches
+          highlight = { backdrop = true },
+          -- Key mappings
+          keys = { 'f', 'F', 't', 'T', ';', ',' },
         },
       },
     },
     keys = {
+      -- 's' for jumping to line start
       {
         's',
         mode = { 'n', 'x', 'o' },
         function()
-          require('flash').jump()
+          require('flash').jump {
+            search = { mode = 'search', max_length = 0 },
+            label = { after = { 0, 0 } },
+            pattern = '^',
+          }
         end,
-        desc = 'Flash',
+        desc = 'Flash jump to line',
       },
+      -- 'S' for treesitter selection
       {
         'S',
-        mode = { 'n', 'x', 'o' },
+        mode = { 'n', 'o', 'x' },
         function()
           require('flash').treesitter()
         end,
@@ -173,9 +219,108 @@ local vscode_plugins = {
         function()
           require('flash').toggle()
         end,
-        desc = 'Toggle Flash Search',
+        desc = 'Toggle Flash search',
       },
     },
+  },
+
+  {
+    'nvim-mini/mini.jump2d',
+    version = '*',
+    config = function()
+      require('mini.jump2d').setup {}
+      vim.keymap.set({ 'n', 'x', 'o' }, 'z', '<Cmd>lua MiniJump2d.start()<CR>', { desc = 'Jump via mini.jump2d' })
+    end,
+  },
+
+  {
+    'kevinhwang91/nvim-hlslens',
+    event = 'VeryLazy',
+
+    opts = {
+      -- override_lens = function(render, posList, nearest, idx, relIdx)
+      -- 	local sfw = vim.v.searchforward == 1
+      -- 	local indicator
+      -- 	local text
+      -- 	local chunks
+      -- 	local absRelIdx = math.abs(relIdx)
+      --
+      -- 	if absRelIdx > 1 then
+      -- 		indicator = ("%d%s"):format(absRelIdx, sfw ~= (relIdx > 1) and "▲" or "▼")
+      -- 	elseif absRelIdx == 1 then
+      -- 		indicator = sfw ~= (relIdx == 1) and "▲" or "▼"
+      -- 	else
+      -- 		indicator = ""
+      -- 	end
+      --
+      -- 	local lnum, col = unpack(posList[idx])
+      --
+      -- 	if nearest then
+      -- 		local cnt = #posList
+      --
+      -- 		if indicator ~= "" then
+      -- 			text = ("[%s %d/%d]"):format(indicator, idx, cnt)
+      -- 		else
+      -- 			text = ("[%d/%d]"):format(idx, cnt)
+      -- 		end
+      --
+      -- 		chunks = {
+      -- 			{ " " },
+      -- 			{ text, "HlSearchLensNear" },
+      -- 		}
+      -- 	else
+      -- 		text = ("[%s %d]"):format(indicator, idx)
+      --
+      -- 		chunks = {
+      -- 			{ " " },
+      -- 			{ text, "HlSearchLens" },
+      -- 		}
+      -- 	end
+      --
+      -- 	render.setVirt(0, lnum - 1, col - 1, chunks, nearest)
+      -- end,
+    },
+
+    config = function(_, opts)
+      require('hlslens').setup(opts)
+
+      local map = vim.keymap.set
+
+      map('n', 'n', function()
+        vim.cmd('normal! ' .. vim.v.count1 .. 'n')
+        require('hlslens').start()
+      end, { silent = true, desc = 'Next search result' })
+
+      map('n', 'N', function()
+        vim.cmd('normal! ' .. vim.v.count1 .. 'N')
+        require('hlslens').start()
+      end, { silent = true, desc = 'Previous search result' })
+
+      map('n', '*', function()
+        vim.cmd 'normal! *'
+        require('hlslens').start()
+      end, { silent = true, desc = 'Search word under cursor' })
+
+      map('n', '#', function()
+        vim.cmd 'normal! #'
+        require('hlslens').start()
+      end, { silent = true, desc = 'Search word under cursor backward' })
+
+      map('n', 'g*', function()
+        vim.cmd 'normal! g*'
+        require('hlslens').start()
+      end, { silent = true, desc = 'Search partial word' })
+
+      map('n', 'g#', function()
+        vim.cmd 'normal! g#'
+        require('hlslens').start()
+      end, { silent = true, desc = 'Search partial word backward' })
+
+      map('n', '<leader>l', '<cmd>nohlsearch<cr>', {
+        silent = true,
+        desc = 'Clear search highlighting',
+      })
+    end,
   },
 }
 

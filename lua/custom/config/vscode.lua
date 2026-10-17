@@ -163,7 +163,8 @@ local mappings = {
   { 'n', '<leader>cp', 'copyRelativeFilePath' },
 
   -- File Operations
-  { 'n', '<leader>ff', 'workbench.action.quickOpen' },
+  -- { 'n', '<leader>ff', 'workbench.action.quickOpen' },
+  { 'n', '<leader>ff', 'code-telescope.fuzzy.file' },
   { 'n', '<leader>fF', 'workbench.action.openRecent' },
   { 'n', '<leader>fa', 'fileutils.newFileAtRoot' },
   { 'n', '<leader>fx', 'workbench.action.closeActiveEditor' },
@@ -172,7 +173,8 @@ local mappings = {
   { 'n', '<leader>bD', 'workbench.action.closeEditorsInOtherGroups' },
 
   -- Search & Replace
-  { 'n', '<leader>fg', 'actions.find' },
+  -- { 'n', '<leader>fg', 'actions.find' },
+  { 'n', '<leader>fg', 'code-telescope.fuzzy.wsText' },
   { 'n', '<leader>fr', 'editor.action.startFindReplaceAction' },
   { 'n', '<leader>fG', 'workbench.action.findInFiles' },
   { 'n', '<leader>fR', 'workbench.action.replaceInFiles' },
