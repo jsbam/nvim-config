@@ -4,3 +4,5 @@ lazy-lock.json
 /profile.json
 .claude/
 mise.toml
+
+/.luarc.json
