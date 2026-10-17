@@ -10,31 +10,32 @@ return {
     vim.g.VM_default_mappings = 0
     vim.g.VM_quit_after_leaving_insert_mode = 0
     vim.g.VM_mouse_mappings = 1
+    vim.g.VM_add_cursor_at_pos_no_mappings = 1
     vim.g.VM_maps = vim.tbl_extend("force", vim.g.VM_maps or {}, {
-      ["Find Under"] = "<C-n>",
-      ["Find Subword Under"] = "<C-n>",
-      -- ["Select All"] = "<leader>ma",
-      -- ["Visual All"] = "<leader>ma",
-      ["Exit"] = "<Esc><Esc>",
+      ['Exit'] = '<Esc><Esc>',
+      ['Find Under'] = '<C-n>',
+      ['Find Subword Under'] = '<C-n>',
+      -- ['Select All'] = '<leader>ma',
+      -- ['Visual All'] = '<leader>ma',
       -- Avoid mapping bare [ and ] to Lua callbacks (shows errors in :VMDebug)
-      ["Goto Prev"] = "",
-      ["Goto Next"] = "",
-      ["Align"] = "<leader>m=",
-      ["Add Cursor Down"] = "<C-d>",
-      ["Add Cursor Up"] = "<C-u>",
-      ["Switch Mode"] = "<Tab>",
-      ["Remove Region"] = "Q",                 -- remove current cursor position, move cursor backward.
-      ["Skip Region"] = "q",                   -- skip current cursor position.
-      [" VM-Mouse-Cursor"] = "<C-LeftMouse>",  --add VM-cursor with mouse click
-      [" VM-Mouse-Column"] = "<C-RightMouse>", --add VM-cursor to column with mouse click
-      ["Move Right"] = "<S-Right>",
-      ["Move Left"] = "<S-Left>",
+      ['Goto Prev'] = '',
+      ['Goto Next'] = '',
+      ['Align'] = '<leader>m=',
+      ['Add Cursor Down'] = '<C-d>',
+      ['Add Cursor Up'] = '<C-u>',
+      ['Switch Mode'] = '<Tab>',
+      ['Remove Region'] = 'Q',               -- remove current cursor position, move cursor backward.
+      ['Skip Region'] = 'q',                 -- skip current cursor position.
+      ['Mouse Cursor'] = '<C-LeftMouse>',    -- add VM-cursor with mouse click
+      ['Mouse Column'] = '<C-RightMouse>',   -- add VM-cursor to column with mouse click
+      ['Move Right'] = '<S-Right>',
+      ['Move Left'] = '<S-Left>',
       -- Visual mode mappings (disabled, using direct <Plug> mappings below)
-      ["Toggle Single Region"] = "",
-      ["Visual Cursors"] = "",
-      ["Visual Add"] = "",
-      ["Visual Find"] = "",
-      ["Visual Regex"] = "",
+      ['Toggle Single Region'] = '',
+      ['Visual Cursors'] = '',
+      ['Visual Add'] = '',
+      ['Visual Find'] = '',
+      ['Visual Regex'] = '',
     })
   end,
   config = function()

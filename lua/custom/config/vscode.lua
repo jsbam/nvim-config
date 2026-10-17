@@ -136,10 +136,10 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 vim.keymap.set(
-  "n",
-  "<leader>sr",
+  'n',
+  '<leader>sr',
   [[:%s/\<<C-r><C-w>\>/]],
-  { desc = "Replace word under cursor globally in current file" }
+  { desc = 'Replace word under cursor globally in current file' }
 )
 -- Paste over selected text without yanking it
 vim.keymap.set('x', 'p', '"_dP', { noremap = true, silent = true })
@@ -163,7 +163,8 @@ local mappings = {
   { 'n', '<leader>cp', 'copyRelativeFilePath' },
 
   -- File Operations
-  { 'n', '<leader>ff', 'workbench.action.quickOpen' },
+  -- { 'n', '<leader>ff', 'workbench.action.quickOpen' },
+  { 'n', '<leader>ff', 'code-telescope.fuzzy.file' },
   { 'n', '<leader>fF', 'workbench.action.openRecent' },
   { 'n', '<leader>fa', 'fileutils.newFileAtRoot' },
   { 'n', '<leader>fx', 'workbench.action.closeActiveEditor' },
@@ -172,7 +173,7 @@ local mappings = {
   { 'n', '<leader>bD', 'workbench.action.closeEditorsInOtherGroups' },
 
   -- Search & Replace
-  { 'n', '<leader>fg', 'actions.find' },
+  -- { 'n', '<leader>fg', 'actions.find' },
   { 'n', '<leader>fr', 'editor.action.startFindReplaceAction' },
   { 'n', '<leader>fG', 'workbench.action.findInFiles' },
   { 'n', '<leader>fR', 'workbench.action.replaceInFiles' },
