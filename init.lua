@@ -7,7 +7,15 @@ vim.g.mapleader = ' '
 
 -- Set sqlite path for Windows
 if vim.fn.has 'win32' == 1 then
-  vim.g.sqlite_clib_path = vim.fn.stdpath('data') .. '/lazy/sqlite.lua/lua/sqlite/sqlite3.dll'
+  local sqlite_path = vim.fn.stdpath 'data' .. '/sqlite3.dll'
+  vim.g.sqlite_clib_path = sqlite_path
+  vim.env.LIBSQLITE = sqlite_path
+
+  -- nvim-treesitter's parser builder defaults to MSVC on Windows.
+  -- Use the MinGW compiler already available on PATH instead.
+  if vim.fn.executable 'gcc' == 1 then
+    vim.env.CC = vim.fn.exepath 'gcc'
+  end
 end
 -- Optional treesitter language customizations (from upstream)
 -- vim.treesitter.language.add('pandoc_markdown', { path = "/usr/local/lib/libtree-sitter-pandoc-markdown.so" })

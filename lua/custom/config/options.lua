@@ -36,12 +36,6 @@ if vim.o.shell:find 'bash' then
   vim.o.shellxquote = ''
 end
 
--- Windows-specific: SQLite path for database plugins
-if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
-  -- \\\\ in Lua strings → \\ on disk
-  vim.g.sqlite_clib_path = 'C:\\\\ProgramData\\\\chocolatey\\\\lib\\\\sqlite\\\\tools\\\\sqlite3.dll'
-end
-
 -- Vim-visual-multi configuration
 vim.g.VM_defaults_mappings = 1
 vim.g.VM_maps = {
